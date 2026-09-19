@@ -48,9 +48,9 @@ Worker 是角色，`codex-worker` 是本文使用的调用入口，底层模型�
 
 替换时保留任务边界、输入输出约定和质量标准，再用相同任务验证工具调用、文件改动、报告真实性、耗时和总成本。更换模型需要适配与验证；本仓库提供策略和契约，未附带通用模型适配器。具体步骤见[Worker 契约](docs/worker-contract.md)。
 
-## 与 Astra + DeepSeek 实践的关系
+## 相似社区实践
 
-社区作者 Artforartsake99 在 [Astra + 8 Deepseek 4.1 subagents. Insanely cheap tokens.](https://www.reddit.com/r/vibecoding/comments/1wg5ogw/astra_8_deepseek_41_subagents_insanely_cheap/) 中分享了 Astra 编排、DeepSeek 执行的做法。本文借鉴其直观的角色分工表达，将它组织为可迁移的工作方法：**人主导目标，指挥模型管理质量，执行模型按需替换。**
+社区作者 Artforartsake99 在 [Astra + 8 Deepseek 4.1 subagents. Insanely cheap tokens.](https://www.reddit.com/r/vibecoding/comments/1wg5ogw/astra_8_deepseek_41_subagents_insanely_cheap/) 中分享了 Astra 编排、DeepSeek 执行的做法。本项目的工作流此前已独立落地；在本次文档完善中，我们参考了该帖直观的角色分工表达。该帖作为相似社区实践列出，工作流本身并非源自该帖。本项目强调：**人主导目标，指挥模型管理质量，执行模型按需替换。**
 
 该帖是社区经验，不是本项目的性能证明；我们未据此推算节省率，也不要求使用 Astra、DeepSeek 或固定数量的 Worker。参考信息与证据边界见[成本说明](docs/economics.md)。
 

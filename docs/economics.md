@@ -42,8 +42,10 @@
 
 使用[成本与质量复核模板](../templates/cost-review.md)记录实际数据。模型、供应商或版本变化时，还应按[工作者契约](worker-contract.md)做同任务试运行，不能从一次样例推断普遍节省。
 
-## 灵感来源与证据边界
+## 相似社区实践与证据边界
 
-本文的动机之一是 Artforartsake99 的 Reddit 帖子 [“Astra + 8 Deepseek 4.1 subagents. Insanely cheap tokens.”](https://www.reddit.com/r/vibecoding/comments/1wg5ogw/astra_8_deepseek_41_subagents_insanely_cheap/)（查阅于 2026-09-19）。作者以第一人称称，Astra extra-high 指挥模型使用了每周订阅配额的 10%，DeepSeek 子工作者花费为 0.94 美元。
+本项目的工作流此前已独立落地。本次文档完善仅参考了相似实践的表达方式，以下帖子并非本工作流的来源。
+
+相似社区案例可参见 Artforartsake99 的 Reddit 帖子 [“Astra + 8 Deepseek 4.1 subagents. Insanely cheap tokens.”](https://www.reddit.com/r/vibecoding/comments/1wg5ogw/astra_8_deepseek_41_subagents_insanely_cheap/)（查阅于 2026-09-19）。作者以第一人称称，Astra extra-high 指挥模型使用了每周订阅配额的 10%，DeepSeek 子工作者花费为 0.94 美元。
 
 这是一则经验叙述，没有受控的单模型基线，也没有经独立验证的等效质量。10% 配额不等于 10% 货币成本或 10% 令牌量，0.94 美元也只覆盖其报告的工作者费用。因此它可作为测量问题的启发，不能作为价格、模型性能或普遍节省的证据。

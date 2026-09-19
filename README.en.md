@@ -26,9 +26,9 @@ Worker is a role; `codex-worker` is the example invocation interface. A suitable
 
 Preserve workspace boundaries, task input, artifacts, evidence, reporting, and exit-status expectations. Trial a replacement on the same representative tasks and acceptance criteria, checking tool use, quality, report accuracy, latency, and total cost. API compatibility alone does not establish execution compatibility. This repository distributes policies and templates, not a worker runtime or universal adapter. See [the worker contract](docs/worker-contract.md).
 
-## Community inspiration
+## Similar community practice
 
-Artforartsake99's [Astra + 8 Deepseek 4.1 subagents. Insanely cheap tokens.](https://www.reddit.com/r/vibecoding/comments/1wg5ogw/astra_8_deepseek_41_subagents_insanely_cheap/) describes Astra coordinating DeepSeek workers. We reference its clear division of roles and develop a portable workflow with human authority, replaceable execution models, and evidence-based acceptance. That anecdote is not our benchmark or a requirement to use those models or eight workers.
+Artforartsake99's [Astra + 8 Deepseek 4.1 subagents. Insanely cheap tokens.](https://www.reddit.com/r/vibecoding/comments/1wg5ogw/astra_8_deepseek_41_subagents_insanely_cheap/) describes Astra coordinating DeepSeek workers. Our workflow had already been independently put into practice before that post. During this documentation update, we drew on its clear presentation of role separation. We cite it as a similar community practice, not as the origin of our workflow, which emphasizes human authority, replaceable execution models, and evidence-based acceptance. That anecdote is not our benchmark or a requirement to use those models or eight workers.
 
 This is an independent community project under the MIT License, not an official vendor product.
 
