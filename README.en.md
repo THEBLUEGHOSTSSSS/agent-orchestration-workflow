@@ -1,10 +1,36 @@
 # agent-orchestration-workflow
 
-A portable policy for orchestrating a high-value commander and a high-throughput external execution worker. The commander owns judgment, architecture, risk, critical review, and final acceptance. The worker handles bounded reading, implementation, rewriting, testing, verification, and iteration.
+**Humans set direction. Strong models make delegated judgments. Replaceable workers do the bulk execution.**
 
-This is an independent community project, not an official product of any vendor. It does **not** distribute the `codex-worker` implementation and makes no measured cost, speed, or performance guarantee.
+A workflow designed for high cost-effectiveness: reserve expensive reasoning and context for architecture, decisions, and critical review; delegate substantial reading, implementation, rewriting, testing, and iteration to capable workers with suitable costs. Optimize accepted useful work per budget, with traceable evidence.
 
-[中文](README.md) | [Policy](AGENTS.md) | [Workflow](docs/workflow.md) | [Worker contract](docs/worker-contract.md) | [Security](docs/security.md)
+[中文](README.md) | [Policy](AGENTS.md) | [Workflow](docs/workflow.md) | [Economics](docs/economics.md) | [Worker contract](docs/worker-contract.md) | [Security](docs/security.md)
+
+## The human-led pyramid
+
+![Human at the apex, commander in the middle, replaceable workers at the base](assets/orchestration-pyramid.svg)
+
+The human owns objectives, priorities, constraints, authorization, and ultimate acceptance. The commander makes technical decisions within that delegated scope. Workers complete bounded tasks and return artifacts and evidence. Humans may redirect, override, or stop the workflow at any time.
+
+Human control does not mean approval for every step. Existing authorization remains valid; ordinary implementation proceeds autonomously. Decisions that change goals, authority, or agreed budgets return to the human.
+
+## Why this can be cost-effective
+
+Move bulk execution to economical, capable workers; return compressed evidence packs; let a worker complete a bounded fix/test loop before reporting; review in proportion to risk. This concentrates primary-model capacity on work where judgment adds the most value.
+
+Compare **primary-model quota**, **money spent**, and **aggregate tokens** separately. Aggregate tokens can increase while primary-model consumption falls. Include coordination, retries, integration, technical review, and human time when comparing accepted results. Small tasks or unreliable workers can make delegation more expensive. This project has not published a controlled savings benchmark; see [the cost framework](docs/economics.md).
+
+## Replace the model, retain the workflow
+
+Worker is a role; `codex-worker` is the example invocation interface. A suitable adapter can connect a different provider or a local model with the required tools. The commander is also a role, not a fixed vendor requirement.
+
+Preserve workspace boundaries, task input, artifacts, evidence, reporting, and exit-status expectations. Trial a replacement on the same representative tasks and acceptance criteria, checking tool use, quality, report accuracy, latency, and total cost. API compatibility alone does not establish execution compatibility. This repository distributes policies and templates, not a worker runtime or universal adapter. See [the worker contract](docs/worker-contract.md).
+
+## Community inspiration
+
+Artforartsake99's [Astra + 8 Deepseek 4.1 subagents. Insanely cheap tokens.](https://www.reddit.com/r/vibecoding/comments/1wg5ogw/astra_8_deepseek_41_subagents_insanely_cheap/) describes Astra coordinating DeepSeek workers. We reference its clear division of roles and develop a portable workflow with human authority, replaceable execution models, and evidence-based acceptance. That anecdote is not our benchmark or a requirement to use those models or eight workers.
+
+This is an independent community project under the MIT License, not an official vendor product.
 
 ## Lifecycle
 

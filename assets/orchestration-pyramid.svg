@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="610" viewBox="0 0 1000 610" role="img" aria-labelledby="title description">
+  <title id="title">Human-led orchestration pyramid / 人主导的协作金字塔</title>
+  <desc id="description">Human at the apex owns goals, budget and final authority. Commander in the middle plans, delegates and reviews. Replaceable workers at the base read, implement, test and iterate. Human authority governs all layers.</desc>
+  <rect width="1000" height="610" rx="24" fill="#f6f8fb"/>
+  <g font-family="system-ui, -apple-system, 'Noto Sans CJK SC', sans-serif" text-anchor="middle">
+    <text x="500" y="51" font-size="25" font-weight="700" fill="#17243d">人主导方向 · 模型分工协作</text>
+    <text x="500" y="79" font-size="16" fill="#52617a">HUMAN AUTHORITY · DELEGATED JUDGMENT · REPLACEABLE EXECUTION</text>
+    <path d="M500 104 L657 249 H343 Z" fill="#18324f"/>
+    <text x="500" y="189" font-size="26" font-weight="700" fill="#fff">人 / HUMAN</text>
+    <text x="500" y="222" font-size="17" fill="#e3ecf7">目标 · 预算 · 最终决定权</text>
+    <path d="M333 261 H667 L809 391 H191 Z" fill="#25607b"/>
+    <text x="500" y="312" font-size="27" font-weight="700" fill="#fff">指挥模型 / COMMANDER</text>
+    <text x="500" y="347" font-size="19" fill="#fff">规划 · 委派 · 审查 · 授权内技术验收</text>
+    <text x="500" y="374" font-size="16" fill="#e3f2f7">Plan · Delegate · Review</text>
+    <path d="M178 403 H822 L950 523 H50 Z" fill="#d5e9e5"/>
+    <text x="500" y="446" font-size="27" font-weight="700" fill="#153d39">可替换的执行层 / WORKERS</text>
+    <text x="500" y="479" font-size="19" fill="#214d47">阅读 · 实现 · 改写 · 测试 · 迭代</text>
+    <text x="500" y="507" font-size="16" fill="#214d47">Choose suitable models · Keep task and evidence contracts</text>
+    <text x="500" y="565" font-size="17" fill="#344760">人在顶层保留决定权；已授权的日常工作自主推进。</text>
+    <text x="500" y="590" font-size="15" fill="#52617a">Human control with autonomy inside the agreed scope.</text>
+  </g>
+</svg>
