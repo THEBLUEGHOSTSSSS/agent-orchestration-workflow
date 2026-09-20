@@ -1,0 +1,27 @@
+{
+  "_notice": "Synthetic illustration only; this record is not real approval, a runtime contract, or a validated schema. It does not trigger shell execution.",
+  "_documentation": "../../docs/structured-handoff.md",
+  "schema_version": "0.1",
+  "task_id": "T-01",
+  "goal_id": "G-DEMO",
+  "goal_revision": 1,
+  "action": "Correct the identified README wording typo in docs/demo.md while preserving its surrounding meaning.",
+  "expected_output": [
+    "A minimal documentation change confined to docs/demo.md.",
+    "A handoff that reports the check outcome without claiming unobserved success."
+  ],
+  "files_to_touch": [
+    "docs/demo.md"
+  ],
+  "tests_required": [
+    {
+      "criterion_id": "AC-1",
+      "check": "Review the diff and confirm that only the identified typo changed in docs/demo.md.",
+      "evidence_required": "Record the reviewed diff and observed outcome, or explicitly record not-run with a reason."
+    }
+  ],
+  "deps": [],
+  "injected_experiences": [],
+  "execution_role": "worker",
+  "status": "pending"
+}

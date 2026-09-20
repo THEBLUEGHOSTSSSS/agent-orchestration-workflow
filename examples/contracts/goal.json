@@ -1,0 +1,43 @@
+{
+  "_notice": "Synthetic illustration only; this record is not real approval, a runtime contract, or a validated schema.",
+  "_documentation": "../../docs/structured-handoff.md",
+  "schema_version": "0.1",
+  "goal_id": "G-DEMO",
+  "revision": 1,
+  "objective": "Correct one README wording typo in the synthetic documentation file docs/demo.md.",
+  "non_goals": [
+    "Rewrite surrounding documentation.",
+    "Modify any file other than docs/demo.md."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "criterion": "The identified typo is corrected without changing the surrounding meaning.",
+      "evidence_required": "A reviewed diff limited to docs/demo.md showing the wording correction."
+    }
+  ],
+  "authorization": {
+    "basis": "Synthetic demonstration only; this does not grant actual access or approval.",
+    "allowed_actions": [
+      "Read docs/demo.md for context.",
+      "Edit only the identified typo in docs/demo.md.",
+      "Review the resulting diff."
+    ],
+    "requires_new_authorization": [
+      "Modify another file.",
+      "Publish, commit, push, or affect an external system."
+    ]
+  },
+  "constraints": [
+    "Scope metadata is descriptive and is not access-control enforcement.",
+    "No field authorizes shell autoexecution.",
+    "This example records no successful execution or acceptance result."
+  ],
+  "budget": {
+    "currency": null,
+    "max_cost": null,
+    "max_retries": null,
+    "note": "unspecified is not unlimited"
+  },
+  "status": "draft"
+}

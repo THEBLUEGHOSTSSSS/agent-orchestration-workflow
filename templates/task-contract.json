@@ -1,0 +1,26 @@
+{
+  "_notice": "Optional illustrative record only; it is not a runtime contract or validated schema. Scope metadata is not enforcement, and no field authorizes shell autoexecution.",
+  "_documentation": "../docs/structured-handoff.md",
+  "schema_version": "0.1",
+  "task_id": "T-01",
+  "goal_id": "G-EXAMPLE",
+  "goal_revision": 1,
+  "action": "Perform the bounded documentation action described by goal G-EXAMPLE revision 1.",
+  "expected_output": [
+    "Describe the artifact or observable result expected from this task."
+  ],
+  "files_to_touch": [
+    "docs/example.md"
+  ],
+  "tests_required": [
+    {
+      "criterion_id": "AC-1",
+      "check": "Describe a relevant review or validation check in prose.",
+      "evidence_required": "Record the observed result or explicitly record not-run and why."
+    }
+  ],
+  "deps": [],
+  "injected_experiences": [],
+  "execution_role": "worker",
+  "status": "pending"
+}

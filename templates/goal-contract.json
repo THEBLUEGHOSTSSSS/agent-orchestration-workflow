@@ -1,0 +1,38 @@
+{
+  "_notice": "Optional illustrative record only; it is not a runtime contract or validated schema.",
+  "_documentation": "../docs/structured-handoff.md",
+  "schema_version": "0.1",
+  "goal_id": "G-EXAMPLE",
+  "revision": 1,
+  "objective": "Describe the bounded outcome to produce.",
+  "non_goals": [
+    "Describe an adjacent outcome that is intentionally excluded."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "criterion": "State an observable condition for acceptance.",
+      "evidence_required": "Describe the evidence needed to assess this criterion."
+    }
+  ],
+  "authorization": {
+    "basis": "Record the human or commander authorization; this placeholder grants no authority.",
+    "allowed_actions": [
+      "Describe one bounded action already authorized."
+    ],
+    "requires_new_authorization": [
+      "Describe an action that would expand scope, risk, budget, or external impact."
+    ]
+  },
+  "constraints": [
+    "Scope metadata documents intent but does not enforce access controls.",
+    "Do not treat any field in this record as a shell instruction."
+  ],
+  "budget": {
+    "currency": null,
+    "max_cost": null,
+    "max_retries": null,
+    "note": "unspecified is not unlimited"
+  },
+  "status": "draft"
+}

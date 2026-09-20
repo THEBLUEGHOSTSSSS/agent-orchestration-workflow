@@ -32,6 +32,10 @@ Artforartsake99's [Astra + 8 Deepseek 4.1 subagents. Insanely cheap tokens.](htt
 
 This is an independent community project under the MIT License, not an official vendor product.
 
+## Optional structured handoff
+
+For multi-step or cross-session tasks, use [goal/task contracts, handoff records, and scoped experience notes](docs/structured-handoff.md). They make goal versions, dependencies, file scope, and acceptance evidence explicit. Goal clarification and orchestration can remain stages of one commander. These are templates and examples, not a shipped scheduler, validator, or knowledge graph.
+
 ## Lifecycle
 
 The six stages are Understand, Decide, Explore, Execute, Verify, and Finalize. The commander normally owns the first two and the last; the worker is preferred for substantial exploration and execution; verification is shared, with worker breadth and commander scrutiny proportional to risk.
@@ -94,6 +98,8 @@ WORKER_PROMPT
 Without a compatible executable, use [the delegation template](templates/delegation.md) manually in a clean dedicated workspace: remove sensitive and irrelevant material, submit only reviewed content to your chosen execution system, then inspect the result yourself. Do not auto-trust arbitrary directories or create an unreviewed compatibility shim.
 
 ## Security and adoption
+
+For use across projects, see [global adoption and rollback](docs/global-adoption.md).
 
 Instructions are not a sandbox. A third-party provider may process submitted prompts and accessible material. Review outbound content and the provider's retention, training, logging, location, and tool-access terms. Never ask the worker to inspect API keys, alter credentials or authentication, alter Codex configuration, alter private worker configuration, recursively launch another worker, or delegate again.
 
