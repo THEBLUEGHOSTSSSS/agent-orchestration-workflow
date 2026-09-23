@@ -1,0 +1,40 @@
+{
+  "task_id": "EXAMPLE-NOT-EXECUTED",
+  "baseline": "record the actual starting revision",
+  "status": "pending",
+  "worker_attempts": [
+    {
+      "number": 1,
+      "decision": "blocked",
+      "review": "Example only: no worker has been dispatched. Replace with the actual decision.",
+      "evidence": {
+        "path": "records/replace-with-actual-evidence.md",
+        "sha256": "replace-with-actual-SHA256"
+      }
+    }
+  ],
+  "commander_repair": null,
+  "commander": "",
+  "criteria": [
+    {
+      "id": "AC-1",
+      "status": "not-run",
+      "check": "Replace with an actual check and observed result",
+      "evidence": {
+        "path": "records/replace-with-actual-evidence.md",
+        "sha256": "replace-with-actual-SHA256"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "replace-with-delivered-artifact",
+      "sha256": "replace-with-actual-SHA256"
+    }
+  ],
+  "experience": {
+    "path": "records/replace-with-experience.md",
+    "sha256": "replace-with-actual-SHA256"
+  },
+  "unresolved": []
+}

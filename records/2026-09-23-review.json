@@ -1,0 +1,164 @@
+{
+  "task_id": "UPGRADE-DOCS-20260923",
+  "baseline": "77e19fafb40454ce0e1f0e95bef6567b6d60403b",
+  "status": "accepted",
+  "worker_attempts": [
+    {
+      "number": 1,
+      "decision": "takeover",
+      "review": "Execution interrupted by commander after artifacts were written; no final worker report. Commander reviewed and corrected actual artifacts.",
+      "evidence": {
+        "path": "records/2026-09-23-validation.md",
+        "sha256": "88f82528d82e488c500582afdc51c45033fbd2df568188dc725ad470b32d6c90"
+      }
+    }
+  ],
+  "commander_repair": {
+    "summary": "Corrected baseline, bounded diagram, stop conditions and checker documentation; reviewed code and verified local acceptance criteria.",
+    "evidence": {
+      "path": "records/2026-09-23-validation.md",
+      "sha256": "88f82528d82e488c500582afdc51c45033fbd2df568188dc725ad470b32d6c90"
+    }
+  },
+  "commander": "primary session; human retains ultimate acceptance",
+  "criteria": [
+    {
+      "id": "AC-POLICY",
+      "status": "verified",
+      "check": "Inspect consistent command/review roles, two-round cap and mandatory acceptance/experience.",
+      "evidence": {
+        "path": "records/2026-09-23-validation.md",
+        "sha256": "88f82528d82e488c500582afdc51c45033fbd2df568188dc725ad470b32d6c90"
+      }
+    },
+    {
+      "id": "AC-GATE",
+      "status": "verified",
+      "check": "Run 16 boundary tests and verify CLI rejects unexecuted example.",
+      "evidence": {
+        "path": "records/2026-09-23-validation.md",
+        "sha256": "88f82528d82e488c500582afdc51c45033fbd2df568188dc725ad470b32d6c90"
+      }
+    },
+    {
+      "id": "AC-DOCS",
+      "status": "verified",
+      "check": "Check scoped JSON, contract references, local links and publication privacy.",
+      "evidence": {
+        "path": "records/2026-09-23-validation.md",
+        "sha256": "88f82528d82e488c500582afdc51c45033fbd2df568188dc725ad470b32d6c90"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "42f51c8ab2ad5ca593daf22ccc9a85a0d6ec35e202e30540f4e8c7e880aa5b2c"
+    },
+    {
+      "path": "README.en.md",
+      "sha256": "ca2ef9dae605d304c7697c738a21ecf6eed950ea324c8dbe0864037965824d03"
+    },
+    {
+      "path": "README.md",
+      "sha256": "a670529f1e088339749cbf305c5b78b5ddbc5de86381a0dcd1692f7763117a5a"
+    },
+    {
+      "path": "docs/global-adoption.md",
+      "sha256": "08cea1a9f425409ccdffd74b79b17cd2e308547056135c14209b2d21be5068f3"
+    },
+    {
+      "path": "docs/security.md",
+      "sha256": "3cf6bddadaad77a2ef63c8c9b242b3bc6948c889c2148ae4cacce6df21dd1a47"
+    },
+    {
+      "path": "docs/structured-handoff.md",
+      "sha256": "8c5f55773229524de5d42d3feaf8f6c17e631c86000c74ebcd35ccef3195d7c4"
+    },
+    {
+      "path": "docs/worker-contract.md",
+      "sha256": "62e2c5472e09aee35f6cc84bb89eec84622b28b6794aac4d48c156ac6f12e1b9"
+    },
+    {
+      "path": "docs/workflow.md",
+      "sha256": "9894510a0072ee28055b98860f91f4cacf3133ff76fa486b228a340e9d55d6b2"
+    },
+    {
+      "path": "examples/contracts/goal.json",
+      "sha256": "ae6b9d8f9425223408c3c1809ab26cab6853b0fbb480605122b1dbd39c27d2f3"
+    },
+    {
+      "path": "examples/contracts/task-01.json",
+      "sha256": "83d0ce2a558dd72a8c2b3b9efa5357d014bf4005e2b7ce78f23ab5f918070b82"
+    },
+    {
+      "path": "examples/paper-task.md",
+      "sha256": "61242c5c920fa29450ea7fae601f61a7291c9e2474425694e717efde2da8a055"
+    },
+    {
+      "path": "examples/software-task.md",
+      "sha256": "a72649c77b75ca2f428822eef9f47b5e7e1b6f7484fc2801c81d2fe31a0f1ea4"
+    },
+    {
+      "path": "templates/cost-review.md",
+      "sha256": "4bdc7f3d2a611680960d2af73b960719c267151e00c9dc7b35c7d8eda82ec5bb"
+    },
+    {
+      "path": "templates/delegation.md",
+      "sha256": "c96b14c4f721ed7c2e897f50b450cec4646bd81c4f07dbe180ab3786a8429cab"
+    },
+    {
+      "path": "templates/experience-record.md",
+      "sha256": "fedcd5336f21a9196cafb3edd35accf0e039fd09c56d8fb8224fd65631be4e45"
+    },
+    {
+      "path": "templates/goal-contract.json",
+      "sha256": "360c499c855ed7875dc03d84cf5e0b5d7b3f0440772f4d5aa069754bf12e666f"
+    },
+    {
+      "path": "templates/handoff.md",
+      "sha256": "583baac7d85717fe6b16317f1b5e5e6280937a2c0a166b1ac0d124d5234f927e"
+    },
+    {
+      "path": "templates/paper-review-pack.md",
+      "sha256": "26ca8b628d272c2cdcb57afc629dcb73f76e011707f29e83aa4cc0b0450b0c21"
+    },
+    {
+      "path": "templates/repository-intelligence-pack.md",
+      "sha256": "f1ee96601ff560d5adc60ef31484f741b0a9b6bedb285f63a7a8c1b61589b559"
+    },
+    {
+      "path": "templates/research-pack.md",
+      "sha256": "6ddc9263edb29e32e40ff0eb5c1e54b870e2a73cc9a848aadec3caeab5a37977"
+    },
+    {
+      "path": "templates/task-contract.json",
+      "sha256": "ec3d62e4182be0de1d5b0a68cb563f8487bd07b29c97feb1c7af7e01b44f657b"
+    },
+    {
+      "path": "templates/worker-report.md",
+      "sha256": "6e7d8258070f1d1e6b42d48a654142e63504184f7501536d8cc05353f0bb2f6a"
+    },
+    {
+      "path": "docs/review-and-learning.md",
+      "sha256": "5e454f3985c24566a4bafaf0e81cbfeec8c4d7ee0958115314387b4718d94c6d"
+    },
+    {
+      "path": "docs/review-record.example.json",
+      "sha256": "0ac030a2f108359595f8a17ed659a186602cf9933b90659ba62af606fab09966"
+    },
+    {
+      "path": "scripts/validate_review.py",
+      "sha256": "9a984b8883a44878f01c432032049277d3fa53af685e805df2a483386653ee84"
+    },
+    {
+      "path": "tests/test_validate_review.py",
+      "sha256": "81ed660107c111eba4ac778683c08d50b43760852ae0f9268bf0460fc49b11d5"
+    }
+  ],
+  "experience": {
+    "path": "records/2026-09-23-experience.md",
+    "sha256": "5a816633b59180868f73301f667230a4a2d3926590a672d2832fb4acf8274297"
+  },
+  "unresolved": []
+}

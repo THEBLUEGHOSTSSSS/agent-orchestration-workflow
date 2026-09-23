@@ -1,10 +1,14 @@
 {
   "_notice": "Synthetic illustration only; this record is not real approval, a runtime contract, or a validated schema. It does not trigger shell execution.",
   "_documentation": "../../docs/structured-handoff.md",
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "task_id": "T-01",
   "goal_id": "G-DEMO",
   "goal_revision": 1,
+  "lineage": {
+    "parent_task_id": null,
+    "new_scope_rationale": null
+  },
   "action": "Correct the identified README wording typo in docs/demo.md while preserving its surrounding meaning.",
   "expected_output": [
     "A minimal documentation change confined to docs/demo.md.",
@@ -22,6 +26,19 @@
   ],
   "deps": [],
   "injected_experiences": [],
+  "baseline": "Synthetic pending example; no execution baseline has been captured.",
+  "retry_policy": {
+    "max_worker_attempts": 2,
+    "max_worker_reworks": 1,
+    "exhausted_action": "commander_takeover"
+  },
+  "worker_attempts": [],
+  "commander_review": {
+    "status": "pending",
+    "reviewer": null,
+    "evidence": []
+  },
+  "experience_record": null,
   "execution_role": "worker",
   "status": "pending"
 }

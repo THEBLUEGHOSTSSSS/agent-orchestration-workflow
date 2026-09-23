@@ -4,19 +4,19 @@
 
 A workflow designed for high cost-effectiveness: reserve expensive reasoning and context for architecture, decisions, and critical review; delegate substantial reading, implementation, rewriting, testing, and iteration to capable workers with suitable costs. Optimize accepted useful work per budget, with traceable evidence.
 
-[中文](README.md) | [Policy](AGENTS.md) | [Workflow](docs/workflow.md) | [Economics](docs/economics.md) | [Worker contract](docs/worker-contract.md) | [Security](docs/security.md)
+[中文](README.md) | [Policy](AGENTS.md) | [Workflow](docs/workflow.md) | [Review and learning](docs/review-and-learning.md) | [Economics](docs/economics.md) | [Worker contract](docs/worker-contract.md) | [Security](docs/security.md)
 
 ## The human-led pyramid
 
 ![Human at the apex, commander in the middle, replaceable workers at the base](assets/orchestration-pyramid.svg)
 
-The human owns objectives, priorities, constraints, authorization, and ultimate acceptance. The commander makes technical decisions within that delegated scope. Workers complete bounded tasks and return artifacts and evidence. Humans may redirect, override, or stop the workflow at any time.
+The human owns objectives, priorities, constraints, authorization, and ultimate acceptance. The current primary session acts as commander: it defines tasks, makes architecture and dispatch decisions, reviews critical evidence, and grants technical acceptance within that authority. The role is not hardcoded to Astra, Sol, or any vendor. If its capability is insufficient, it must disclose and escalate rather than pretend a model switch occurred. Workers complete bounded tasks and return artifacts and evidence.
 
 Human control does not mean approval for every step. Existing authorization remains valid; ordinary implementation proceeds autonomously. Decisions that change goals, authority, or agreed budgets return to the human.
 
 ## Why this can be cost-effective
 
-Move bulk execution to economical, capable workers; return compressed evidence packs; let a worker complete a bounded fix/test loop before reporting; review in proportion to risk. This concentrates primary-model capacity on work where judgment adds the most value.
+Move bulk execution to economical, capable workers; return compressed evidence packs; let a worker complete a bounded fix/test loop before reporting; require commander review in proportion to risk. This concentrates primary-model capacity on work where judgment adds the most value.
 
 Compare **primary-model quota**, **money spent**, and **aggregate tokens** separately. Aggregate tokens can increase while primary-model consumption falls. Include coordination, retries, integration, technical review, and human time when comparing accepted results. Small tasks or unreliable workers can make delegation more expensive. This project has not published a controlled savings benchmark; see [the cost framework](docs/economics.md).
 
@@ -32,9 +32,11 @@ Artforartsake99's [Astra + 8 Deepseek 4.1 subagents. Insanely cheap tokens.](htt
 
 This is an independent community project under the MIT License, not an official vendor product.
 
-## Optional structured handoff
+## Mandatory review, two-round limit, and learning
 
-For multi-step or cross-session tasks, use [goal/task contracts, handoff records, and scoped experience notes](docs/structured-handoff.md). They make goal versions, dependencies, file scope, and acceptance evidence explicit. Goal clarification and orchestration can remain stages of one commander. These are templates and examples, not a shipped scheduler, validator, or knowledge graph.
+Before every dispatch, record a stable task ID, acceptance criteria, allowed scope, baseline, attempt number, and relevant verified project experience. After every submission, the commander records evidence, defects, and an `accept`, `rework`, `takeover`, or `blocked` decision. Each logical task permits at most two Worker execution rounds: the initial round and one commander-requested correction. A second failed submission requires commander takeover; renaming the task, changing worker/model/session, or revising the goal does not reset unresolved work.
+
+Every delegated task, including failed or blocked work, requires a project-local experience record. Small direct work may use one brief existing project log entry. Formats are optional; duties are mandatory. See [review and learning](docs/review-and-learning.md) and [structured handoff](docs/structured-handoff.md). An optional [static review checker](scripts/validate_review.py) checks the round limit, takeover records, acceptance evidence and experience files. It cannot prevent bypass calls and is not an automatic scheduler or runtime model switcher; cost savings remain unmeasured.
 
 ## Lifecycle
 
@@ -53,9 +55,9 @@ Six domain modes define responsibility boundaries:
 | LEARNING | Explanation, intuition, misconception diagnosis, interaction | Bulk calculations, exercises, answer checking, examples |
 | DECISION | Trade-offs, personalized implications, final recommendation | Facts, specifications, comparisons, evidence gathering |
 
-For large inputs, use progressive disclosure: the worker reads broadly and returns a traceable context pack; the commander inspects the pack and requests only the raw evidence needed for critical decisions. A bounded worker task should run `inspect -> execute -> verify -> diagnose -> fix -> reverify -> report` before returning.
+For large inputs, use progressive disclosure: the worker reads broadly and returns a traceable context pack; the commander inspects the pack and requests only the raw evidence needed for critical decisions. Within each bounded execution round, a worker may run `inspect -> execute -> verify -> diagnose -> fix -> reverify -> report` under explicit stop conditions. Internal self-checks do not create extra rounds.
 
-Completion must be evidence-based. Reports list files changed, checks actually run, important outputs, checks not run, residual risks, and decisions left to the commander. Never treat a planned check or an unverified worker claim as proof.
+Completion must be evidence-based. A dispatch consumes a round when launched; interrupted or uncertain execution counts conservatively, while waiting on the same running execution does not. Required checks marked not-run make the task blocked, not accepted. Worker self-report, exit status `0`, or `APPROVE` text is never commander acceptance. Final delivery requires commander acceptance against the criteria on the current artifacts and the experience record; human ultimate acceptance remains separate.
 
 ## Runtime prerequisite
 
@@ -73,6 +75,12 @@ cat <<'WORKER_PROMPT' | codex-worker "$PWD"
 MODE:
 SOFTWARE
 
+TASK ID / ATTEMPT:
+[stable task ID] / [1 or 2; two total Worker rounds maximum]
+
+BASELINE / EXPERIENCE / STOP CONDITIONS:
+[actual revision or artifact baseline] / [verified lessons or none] / [time limit and blockers]
+
 OBJECTIVE:
 Complete a bounded, locally verifiable task.
 
@@ -88,10 +96,11 @@ ACCEPTANCE CRITERIA:
 - Checks actually pass, or missing verification is reported accurately.
 
 AUTONOMY:
-Perform reasonable inspect -> execute -> verify -> fix -> reverify loops.
+Perform bounded inspect -> execute -> verify -> fix -> reverify self-checks.
+Set a stop condition before launch; stop on external blockers or the time limit.
 
 OUTPUT:
-Return a compact, evidence-backed report.
+Return a compact, evidence-backed report for commander review and project-local experience capture.
 WORKER_PROMPT
 ```
 
@@ -105,6 +114,6 @@ Instructions are not a sandbox. A third-party provider may process submitted pro
 
 Review and merge this policy with an existing project's instructions. Do not overwrite an existing `AGENTS.md` or install this as a user's global policy by default. Prefer a clean, least-privilege workspace.
 
-Acceptance of local work is separate from authorization to push, open a pull request, publish, message others, or make a repository public. Existing authorization remains valid without repeated confirmation. Ordinary local edits, checks, and commits proceed within task scope.
+Acceptance of local work is separate from authorization to push, open a pull request, publish, message others, or make a repository public. Existing authorization remains valid without repeated confirmation. Ordinary local edits, checks, and commits proceed within task scope. If attempt two fails, the commander directly repairs, tests, and reviews; it may take over earlier. A genuinely independent scope gets a new task ID only with a recorded rationale and lineage.
 
 See [security guidance](docs/security.md), [templates](templates/delegation.md), and the explicitly illustrative [software](examples/software-task.md) and [paper](examples/paper-task.md) examples. Contributions follow [CONTRIBUTING.md](CONTRIBUTING.md). Licensed under the [MIT License](LICENSE).

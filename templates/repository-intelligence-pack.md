@@ -2,6 +2,10 @@
 
 > 用于大型或陌生软件仓库的渐进式披露。目标是压缩上下文并保留可追溯性，不是替指挥者作架构或安全决定。
 
+- Stable task ID: `[ID]`
+- Worker attempt: `[1 of 2 | 2 of 2]`
+- Baseline / verified experience consulted: `[定位或 none]`
+
 ## EXECUTIVE SUMMARY
 
 [仓库用途、与当前任务有关的主要路径、最可能的实施点和首要风险。]
@@ -71,3 +75,7 @@
 ## RECOMMENDED NEXT ACTION
 
 [建议的受限实施任务，或建议指挥者先解决的关键选择。]
+
+## EXPERIENCE INPUT FOR COMMANDER
+
+[仅列可证实的原因、结果、下次派发改进、适用/失效条件和证据链接；没有新教训时明确写 none。由指挥者决定并完成项目经验记录。]

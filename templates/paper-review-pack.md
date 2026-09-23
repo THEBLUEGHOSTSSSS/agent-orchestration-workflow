@@ -2,6 +2,10 @@
 
 > 用于论文、代码和实验材料的证据核对。工作者提取与比较；最终论文主张、创新定位、贡献定义和修辞策略由指挥者决定。
 
+- Stable task ID: `[ID]`
+- Worker attempt: `[1 of 2 | 2 of 2]`
+- Baseline / verified experience consulted: `[定位或 none]`
+
 ## EXECUTIVE SUMMARY
 
 [论文推断出的主旨、证据匹配程度、最重要的三项问题。]
@@ -69,3 +73,7 @@
 ## RECOMMENDED NEXT ACTION
 
 [最有价值的证据补充、定向复核或局部编辑步骤。]
+
+## EXPERIENCE INPUT FOR COMMANDER
+
+[仅列可证实的原因、结果、下次派发改进、适用/失效条件和证据链接；没有新教训时明确写 none。由指挥者决定并完成项目经验记录。]

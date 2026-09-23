@@ -2,6 +2,13 @@
 
 > 只填写实际观察、实际改动和实际运行的检查。没有内容的栏目写“无”并简述原因，不要用推测补齐。
 
+## TASK / ATTEMPT
+
+- Stable task ID: `[ID]`
+- Worker attempt: `[1 of 2 | 2 of 2]`
+- Baseline checked: `[version, artifact state, or evidence location]`
+- Relevant verified experience consulted: `[record IDs and applicability, or none]`
+
 ## EXECUTIVE SUMMARY
 
 [两到四句话说明结果、完成程度、最重要证据和主要阻塞。]
@@ -36,6 +43,8 @@
 
 - [检查名称与未运行原因；若无，写“无”。]
 
+必要检查未运行意味着本次结果应标为 `BLOCKED`，不能建议接受。退出码 `0`、Worker 自报或 `APPROVE` 文本不构成指挥者验收。
+
 ## ACTUAL COST / TIME
 
 | 项目 | 实际值 | 数据来源或可用性 |
@@ -43,7 +52,7 @@
 | 模型/版本/关键配置 | [实际标识；未知则写未知] | [调用记录、人工记录或不可用] |
 | 未缓存输入 / 缓存输入 / 输出 | [分别记录；不可用则写不可用] | [供应商用量或本地计量] |
 | 工作者 / 指挥者 / 其他货币成本 | [分别记录；不可用则写不可用] | [账单或不可用；估算另列，不当作实测] |
-| 重试与返工 | [次数及原因] | [执行记录] |
+| Worker 轮次与本轮内部修正 | [当前轮次；内部修正次数及停止条件] | [执行记录；内部自检不新增轮次] |
 | 总耗时 / 人工时间 | [分别记录] | [计时方式或不可用] |
 
 不同分词器的令牌数不要直接横向比较。完整对照实验可使用[成本与质量复核模板](cost-review.md)。
@@ -66,4 +75,15 @@
 
 ## RECOMMENDED NEXT ACTION
 
-[只写一个最有价值的下一步；若任务已在授权范围内完成，则写指挥者应进行的风险相称复核。]
+[只写一个最有价值的下一步；若任务已在授权范围内完成，则写指挥者应进行的风险相称复核。若这是失败的第 2 轮，只能建议指挥者接管，不能建议第 3 次 Worker 调用。]
+
+## EXPERIENCE INPUT FOR COMMANDER
+
+- Commander decision to record: [留空待指挥者填写 `accept / rework / takeover / blocked`]
+- Evidence-supported cause: [FACT with link, or `unknown`]
+- Outcome: [observed result only]
+- Next-dispatch improvement: [specific improvement, or `none identified`]
+- Applicability / invalidation: [where it applies / what would make it stale]
+- Evidence links: [artifacts, checks, review locations]
+
+本节只是经验记录输入，不是 Worker 自行验收。每个委派任务（包括失败或阻塞）都需要指挥者完成项目本地经验记录。

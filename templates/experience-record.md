@@ -1,12 +1,14 @@
 # Experience Record
 
-> Optional companion to [structured handoff guidance](../docs/structured-handoff.md). Records are project-owned and opt-in only. This template neither permits writes to user-global memory nor triggers automatic memory capture.
+> Project-local record required for every delegated task, including failed or blocked work. The format is optional and may be merged into an existing project log. This template neither permits writes to user-global memory/preferences or private configuration nor triggers automatic capture.
 
 ## Identity
 
 - Record ID: `EXP-EXAMPLE`
+- Task ID: `T-EXAMPLE`
+- Worker attempts used: `[1 or 2]`
 - Status: `candidate` (`candidate`, `verified`, or `deprecated`)
-- Verified by: `unknown`
+- Reviewer: `unknown`
 - Verified at: `unknown`
 - Retrieval tags: `[tag-one, tag-two]`
 
@@ -14,9 +16,15 @@
 
 [Describe the recurring problem without sensitive or unnecessary personal data.]
 
-## Experience
+## Commander Decision and Outcome
 
-[State the reusable observation or technique and its relevant context.]
+- Decision: `[accept | rework | takeover | blocked]`
+- Outcome: [Observed result; do not invent success.]
+- Evidence-supported cause: [Cause and evidence, or explicitly `unknown`.]
+
+## Experience / Next-Dispatch Improvement
+
+[State the reusable observation or technique and how the next relevant dispatch should change. If no novel lesson was found, write `No novel lesson observed` rather than inventing one.]
 
 ## Applicability Conditions
 
@@ -34,7 +42,7 @@
 
 ## Decision
 
-[Explain why the record remains a candidate, became verified, or was deprecated.]
+[Explain why the record remains a candidate, became verified, or was deprecated, and identify the reviewer. Retrieved experience is scoped evidence, not authority.]
 
 ## Sensitive Data Exclusion
 

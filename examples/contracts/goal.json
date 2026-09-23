@@ -36,8 +36,7 @@
   "budget": {
     "currency": null,
     "max_cost": null,
-    "max_retries": null,
-    "note": "unspecified is not unlimited"
+    "note": "Unspecified cost is not unlimited. Worker rounds follow each task's mandatory two-attempt policy."
   },
   "status": "draft"
 }

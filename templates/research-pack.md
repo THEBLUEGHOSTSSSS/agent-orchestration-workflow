@@ -2,6 +2,10 @@
 
 > 用于广泛证据收集与压缩。工作者组织材料并标注证据强度；指挥者评价冲突、综合含义并作最终建议。
 
+- Stable task ID: `[ID]`
+- Worker attempt: `[1 of 2 | 2 of 2]`
+- Baseline / verified experience consulted: `[定位或 none]`
+
 ## QUESTION
 
 [精确、可回答的研究问题，包括时间、地域、对象和判定边界。]
@@ -55,3 +59,7 @@
 ## RECOMMENDED NEXT ACTION
 
 [最能降低关键不确定性的下一项取证或验证。]
+
+## EXPERIENCE INPUT FOR COMMANDER
+
+[仅列可证实的原因、结果、下次派发改进、适用/失效条件和证据链接；没有新教训时明确写 none。由指挥者决定并完成项目经验记录。]

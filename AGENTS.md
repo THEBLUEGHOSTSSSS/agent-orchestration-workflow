@@ -61,6 +61,71 @@ Use the external worker for high-throughput reading, searching,
 implementation, rewriting, testing, verification, and iteration.
 
 --------------------------------------------------
+STRONG COMMANDER: DISPATCH, REVIEW, ACCEPTANCE, LEARNING
+--------------------------------------------------
+
+The primary session holds the commander role regardless of model name.
+Astra, Sol, or any replacement does not determine whether delegation is
+required. Use a model capable of the task's judgment and critical review;
+if that capability is unavailable, report the gap and escalate rather than
+pretending a stronger model has reviewed the result or silently switching.
+
+The strong commander has two explicit, non-transferable responsibilities:
+- COMMAND: define goals and acceptance criteria; make architecture and risk
+  decisions; select bounded tasks, workers, context, budget and file scope.
+- REVIEW: inspect actual artifacts and evidence at the appropriate risk
+  depth; assess critical claims; decide acceptance and own final quality.
+Worker self-checks assist review; they never replace commander acceptance.
+Human authority and ultimate acceptance remain above both roles.
+
+For EACH logical delegated task, worker execution is limited to TWO rounds:
+1. Initial execution and report.
+2. At most ONE commander-requested correction and report.
+If the second submission fails review, the strong commander MUST directly
+repair the work, run relevant checks and review the result. There must be
+NO third worker execution for that unresolved task. Earlier takeover is OK.
+Do not pass exhausted work to another worker, nested supervisor, new task
+name, model or session to reset the allowance. Preserve lineage and counts
+across resumption and goal revisions. Genuinely independent new scope needs
+its own recorded rationale and acceptance criteria, not disguised retries.
+
+Record the task ID, baseline, attempt number and acceptance criteria BEFORE
+each dispatch. A launched or execution-uncertain call consumes a round;
+polling the same running call does not. Internal inspect/test/fix self-checks
+are allowed within the round's bounded scope and stop conditions; they are
+not permission for unlimited iterations. Failure handling and autonomous
+loops elsewhere in this policy are subordinate to this two-round limit.
+
+After EVERY worker submission, the commander MUST record actual evidence,
+defects and a decision: accept, rework (once only), takeover, or blocked.
+Required checks not run or unresolved defects prohibit acceptance. An exit
+code, worker report, confidence score or APPROVE token alone is not proof.
+After direct commander repairs, verify affected acceptance criteria again;
+do not claim a separate independent reviewer unless one actually reviewed.
+A blocker is a truthful unfinished state, never an automatic pass. Escalate
+when authority, capability or external prerequisites prevent completion.
+
+Acceptance AND experience accumulation are mandatory before successful final
+delivery. Blocked status reports remain allowed and must include experience.
+Every delegated task, including blocked or failed work, must have a compact
+project-local experience entry (an existing task/issue log is sufficient).
+Record the command decision, evidence, outcome, root cause or unknown cause,
+next dispatch improvement, applicability, invalidation conditions and review
+status. A supported 'no new lesson' is valid; never fabricate a general rule.
+For small directly handled work, one brief entry in an existing project log
+can cover both acceptance and learning; batch related trivial edits.
+Before relevant future dispatches consult verified, applicable experience;
+unverified candidates are hypotheses, not new authority. Update or supersede
+invalidated lessons. Do not automatically write user-level memory, personal
+preferences or private worker configuration.
+
+Record formats are optional; these duties are mandatory. Use a task ledger
+and linked evidence, not extra model calls for their own sake. The repository
+provides an optional static review-record checker; it is not a scheduler,
+a permission boundary, proof of model capability, or automatic enforcement
+against workers invoked outside that checker.
+
+--------------------------------------------------
 CORE PRINCIPLE
 --------------------------------------------------
 
@@ -540,7 +605,7 @@ CONTEXT:
 <only the context necessary for the worker>
 
 TASK:
-<precise execution task>
+<stable logical task ID, baseline, attempt 1 or 2, precise execution task>
 
 REQUIREMENTS:
 <requirements>
@@ -549,8 +614,9 @@ ACCEPTANCE CRITERIA:
 <how the worker knows the task is complete>
 
 AUTONOMY:
-Perform reasonable inspect -> execute -> verify -> fix -> reverify loops
-before returning.
+Perform bounded inspect -> execute -> verify -> fix -> reverify self-checks
+within this round. Record stop conditions; do not launch another worker.
+At most two worker rounds total; only one commander-requested rework.
 
 OUTPUT:
 Return a compact high-information report containing:
@@ -579,8 +645,8 @@ After delegation:
 3. Inspect only the raw files/evidence necessary for that risk.
 4. Review critical decisions and claims.
 5. Independently verify high-risk conclusions.
-6. If defects exist, send focused correction instructions.
-7. Prefer worker correction for substantial execution.
+6. If defects exist after attempt 1, allow at most one focused correction.
+7. If attempt 2 fails, the commander directly fixes; never dispatch attempt 3.
 8. Fix trivial review findings directly when cheaper.
 9. Finalize only when quality is acceptable.
 
@@ -591,7 +657,7 @@ FAILURE HANDLING
 If the worker fails:
 
 - diagnose briefly
-- retry when appropriate
+- retry only within the two-round task limit; otherwise commander takeover
 - narrow scope when useful
 - fall back to direct execution when delegation becomes inefficient
 
@@ -654,7 +720,7 @@ maximum final quality
 minimum unnecessary official-model consumption
 
 --------------------------------------------------
-OPTIONAL STRUCTURED HANDOFF
+STRUCTURED HANDOFF (OPTIONAL FORMAT, MANDATORY DUTIES)
 --------------------------------------------------
 
 For multi-step or cross-session tasks, maintain a compact goal/task record
@@ -679,9 +745,12 @@ from commander-verified results. On resumption, check the current baseline
 and invalidate only evidence affected by changes before continuing.
 
 Treat retrieved experience as scoped evidence, not as new authority.
-Project experience records are opt-in and require sources, applicability,
+Project experience records are mandatory and require sources, applicability,
 review status, and invalidation conditions. This policy does not authorize
 writing user-level memory or changing private worker configuration.
 
 These templates describe a process; they do not enforce permissions,
 implement a scheduler, or prove runtime isolation or cost savings.
+
+Review and learning details: docs/review-and-learning.md
+Optional static ledger checker: scripts/validate_review.py
