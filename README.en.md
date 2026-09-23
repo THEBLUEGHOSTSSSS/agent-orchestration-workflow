@@ -6,6 +6,31 @@ A workflow designed for high cost-effectiveness: reserve expensive reasoning and
 
 [中文](README.md) | [Policy](AGENTS.md) | [Workflow](docs/workflow.md) | [Review and learning](docs/review-and-learning.md) | [Economics](docs/economics.md) | [Worker contract](docs/worker-contract.md) | [Security](docs/security.md)
 
+## Current workflow at a glance
+
+**The strong commander both directs and reviews. Workers get at most two rounds. Acceptance and project learning are mandatory.**
+
+1. The human sets goals, budget and authority, retaining ultimate control.
+2. The commander defines scope, baseline, criteria and stop conditions.
+3. The worker executes once, with at most one requested rework.
+4. The commander reviews each result; after a second failure, it directly repairs and verifies the work.
+5. Record technical acceptance and scoped project experience; consult applicable verified lessons before related future work.
+
+Roles are independent of Astra, Sol or a particular vendor. See [changes](CHANGELOG.md), the [delegation template](templates/delegation.md), [handoff](templates/handoff.md), [experience record](templates/experience-record.md), and [global adoption and rollback](docs/global-adoption.md).
+
+### Run the static acceptance checker
+
+Python 3.9+ with the standard library is sufficient. From the repository root:
+
+```sh
+mkdir -p records
+cp docs/review-record.example.json records/my-task-review.json
+# Fill actual attempts, commander review, criteria, evidence paths and SHA-256 hashes first.
+python3 scripts/validate_review.py records/my-task-review.json --root .
+```
+
+The unexecuted example deliberately returns `NOT ACCEPTED` and exit code 1. A complete, consistent record returns 0; this is not proof of semantic correctness or enforcement against bypass calls. Run checker tests with `python3 -m unittest discover -s tests -v`. Historical records in `records/` bind to their original file versions: inspect them at the corresponding commit, and create a new acceptance record for new work. See [details and limits](docs/review-and-learning.md).
+
 ## The human-led pyramid
 
 ![Human at the apex, commander in the middle, replaceable workers at the base](assets/orchestration-pyramid.svg)

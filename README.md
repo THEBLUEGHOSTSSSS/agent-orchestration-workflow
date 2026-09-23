@@ -6,6 +6,43 @@
 
 [English](README.en.md) | [完整策略](AGENTS.md) | [工作流](docs/workflow.md) | [复核、两轮上限与经验](docs/review-and-learning.md) | [性价比与成本核算](docs/economics.md) | [Worker 接口与替换](docs/worker-contract.md) | [安全指南](docs/security.md)
 
+## 当前版本一览
+
+**强模型既指挥，也审核；Worker 最多两轮；验收与经验记录缺一不可。**
+
+| 环节 | 必须做什么 |
+| --- | --- |
+| 人 | 确定目标、预算与授权，保留最终决定权 |
+| 强模型指挥 | 拆解任务，明确范围、基线、验收条件和本轮停止条件 |
+| Worker 执行 | 初次执行；如被打回，最多再执行一次 |
+| 强模型审核 | 每次检查实际成果与证据；第二次仍不合格则亲自修改、验证 |
+| 验收与学习 | 记录验收判断和项目经验，后续相关任务先查阅适用经验 |
+
+上述职责不绑定 Astra、Sol 或固定供应商。小任务可以直接完成；更换 Worker 不重置同一任务的两轮额度。版本变化见 [CHANGELOG.md](CHANGELOG.md)。
+
+## 从哪里开始
+
+- **理解规则**：阅读 [审核与经验闭环](docs/review-and-learning.md)。
+- **派发一个任务**：填写 [委派模板](templates/delegation.md)，记录当前是第几轮。
+- **接收并审核成果**：使用 [交接模板](templates/handoff.md)和[经验模板](templates/experience-record.md)。
+- **检查验收记录**：按下方命令运行静态检查器。
+- **用于多个项目**：参见 [全局采用与回滚](docs/global-adoption.md)，合并已有规则，保留备份。
+
+### 静态验收检查器怎么用
+
+需要 Python 3.9+，仅使用标准库。以下命令在仓库根目录运行：
+
+```sh
+mkdir -p records
+cp docs/review-record.example.json records/my-task-review.json
+# 先填写真实任务、轮次、指挥者审核、验收条件与证据文件 SHA-256，再运行：
+python3 scripts/validate_review.py records/my-task-review.json --root .
+```
+
+示例初始为未执行状态，直接运行应返回 `NOT ACCEPTED`、退出码 1。填写并审核完整后，静态一致性检查通过返回 0。它会检查两轮上限、接管记录、验收状态、经验文件和文件摘要；不能判断语义正确性，也不能拦截绕过它的调用。字段说明与边界见 [详细说明](docs/review-and-learning.md)。
+
+检查器回归测试：`python3 -m unittest discover -s tests -v`。`records/` 中的历史验收记录绑定当时文件版本；后续修改文件后摘要不匹配是预期行为，应在对应提交核对历史记录，并为新工作建立新验收记录。
+
 ## 人在顶层的协作金字塔
 
 ![人处于顶层，指挥模型居中，可替换 Worker 位于执行层的金字塔](assets/orchestration-pyramid.svg)
