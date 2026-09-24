@@ -8,17 +8,19 @@ Human 决定目标与授权；Strong Model 负责策略、路由、审核、归�
 
 ```sh
 # 在项目目录中，将 ROUTER 替换为安装后的绝对路径
-ROUTER="$HOME/.codex/workflows/agent-orchestration-workflow/scripts/route_worker.py"
-python3 "$ROUTER" profile task-signature.json
-python3 "$ROUTER" create task.json
-python3 "$ROUTER" route T42
-python3 "$ROUTER" run T42 --timeout 300
+ROUTER="/path/to/agent-orchestration-workflow/scripts/route_worker.py"
+CONFIG="/path/to/your/registry.json"
+# 从 examples/registry.portable.json 复制配置，填写并启用所需 Worker
+python3 "$ROUTER" --config "$CONFIG" profile task-signature.json
+python3 "$ROUTER" --config "$CONFIG" create task.json
+python3 "$ROUTER" --config "$CONFIG" route T42
+python3 "$ROUTER" --config "$CONFIG" run T42 --timeout 300
 # 强模型检查真实成果、运行必要检查后，填写 review.json
-python3 "$ROUTER" review T42 review.json
-python3 "$ROUTER" validate
+python3 "$ROUTER" --config "$CONFIG" review T42 review.json
+python3 "$ROUTER" --config "$CONFIG" validate
 ```
 
-默认账本为当前目录 `.work/worker-routing/state.json`。同一项目必须始终使用同一账本；恢复会话不要更换路径。可通过命令前的 `--state PATH --config PATH` 指定账本及注册表。配置省略时读取 `routing/defaults.json`。使用 `inspect T42` 看任务，`inspect` 看完整账本。账本可能包含项目敏感信息，不应直接公开。
+默认账本为当前目录 `.work/worker-routing/state.json`。同一项目必须始终使用同一账本；恢复会话不要更换路径。可通过命令前的 `--state PATH --config PATH` 指定账本及注册表。配置省略时读取 `routing/defaults.json`，其中模板默认停用，必须先注册并启用实际 Worker。配置参数应在各次操作中保持一致。使用 `inspect T42` 看任务，`inspect` 看完整账本。账本可能包含项目敏感信息，不应直接公开。
 
 `route` 只是建议；`run` 在文件锁内重新计算并保留实际决定。强模型可以在启动时使用 `--worker WORKER_ID` 覆盖选择；Human 的明确指定优先。自动建议不能替代强模型对风险与能力的判断。
 
@@ -61,11 +63,13 @@ python3 "$ROUTER" validate
 
 只在相似任务上下文比较 Worker。对 domain、任务类型族、推理强度先做排除，再按 subtype、语言、框架、范围等结构字段匹配。时间指数衰减、版本变化折扣、过期窗口、独立逻辑任务样本数、向 prior 收缩共同防止旧经验和 2/2 小样本支配决策。每次决定公开各候选评分、排除原因、引用的经验 ID 与 confidence。
 
-初始模型倾向只是 prior；没有永久主 Worker。低风险、强验证、非生产、候选差距小且已有历史时，才允许确定性的 `EXPLORE`。高风险不做探索，但冷启动仍可能使用无历史的 prior，强模型必须判断其适用性。
+公开版不预设模型优先级。用户配置的模型倾向只是 prior；没有永久主 Worker。低风险、强验证、非生产、候选差距小且已有历史时，才允许确定性的 `EXPLORE`。高风险不做探索，但冷启动仍可能使用无历史的 prior，强模型必须判断其适用性。
 
 执行成本未知时保留 null，不伪装成零。审核时可附 `execution_metrics`，包含 `estimated_cost, currency, token_usage, tool_calls, source`，并把对应凭据加入 evidence。不同币种不能直接比较。ROI 是观察性指标，包含修复负担；第一版没有验证任何通用节省百分比。
 
 ## 新 Worker
+
+Codex CLI、Claude Code CLI 与其他模型的完整配置见 [宿主适配说明](../host-adapters.md) 和 `examples/registry.portable.json`。推理强度是供应商自定义的非空标签，`default` 表示不传原生 CLI 覆盖参数；无需支持 xhigh。
 
 复制注册表一条记录，指定唯一 worker_id、provider、model、reasoning_effort、version、能力、可用性和 prior。`codex_worker` adapter 使用 `command + workspace + --model + --reasoning-effort`；本地 launcher 必须支持这些参数。其他供应商可注册 `command` adapter，参数列表支持 `{workspace}/{model}/{reasoning_effort}` 替换，stdin 接收结构化任务；不会经过 shell。命令和配置必须由人或强模型维护，Worker 不可修改。
 

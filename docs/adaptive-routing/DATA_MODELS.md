@@ -28,3 +28,5 @@ Failure attribution enum: MODEL_RELATED, TASK_SPEC_RELATED, ENVIRONMENT_RELATED,
 State progression: READY → RUNNING → AWAITING_REVIEW → ACCEPTED / RETRY_READY / BLOCKED / TAKEOVER_REQUIRED. RETRY_READY allows exactly one remaining worker round. A second rejection forces TAKEOVER_REQUIRED. Commander takeover validates to ACCEPTED with final_status=accepted_after_takeover.
 
 The process writes a worker/version snapshot per attempt. An unknown API snapshot is `unspecified`; timestamp/model/effort remain recorded. Registry changes never rewrite historical worker snapshots. Version mismatch discounts evidence. Ledger aliases and registered work-key fingerprints are immutable budget lineage; intentionally undisclosed semantic equivalence remains a human/commander policy responsibility.
+
+Portable revision: `reasoning_effort` is a provider-specific nonempty label, with `default` omitting native CLI overrides. Adapter kinds: codex_cli, claude_code, command, codex_worker (legacy compatibility). The disabled public template has no default model priority.

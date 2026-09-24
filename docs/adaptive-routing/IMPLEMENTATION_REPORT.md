@@ -1,5 +1,7 @@
 # Adaptive Worker Routing — Implementation and acceptance report
 
+Historical implementation snapshot at commit 959de12. The portable revision supersedes its initial model pool and adapter list; see [host adapters](../host-adapters.md).
+
 Date: 2026-09-24. Baseline: `02d975a`. Status: implemented and locally validated; operational model-cost advantage is **not yet measured**. This report covers code and controlled-entry behavior, not an OS security boundary.
 
 ## A. CURRENT_ARCHITECTURE

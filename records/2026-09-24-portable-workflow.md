@@ -1,0 +1,13 @@
+# Portable workflow acceptance
+
+Baseline: 959de12. Scope: the public GitHub version; the existing private/global installation, provider settings and disabled Claude Code background tasks were not changed.
+
+Accepted by the commander after artifact review and 52 passing tests (46 existing, 6 adapter tests), compilation, whitespace and publication-scope checks. Native CLI help was checked for Codex and Claude Code; official Claude Code import/headless documentation was consulted. Fake-executable integration verifies all four adapter paths, structured stdin, cwd, parameter propagation and the mandatory review gate. No paid Claude Code execution or universal provider certification is claimed.
+
+Changes: disabled neutral default registry; optional portable and historic registries; Codex CLI / Claude Code CLI / generic command / legacy adapters; provider-specific effort labels; shared AGENTS.md and CLAUDE.md; bilingual READMEs and installation/contract documentation. Arbitrary models need an appropriate tool-capable runner; provider identity metadata does not itself configure an endpoint. Known two-attempt and same-user bypass boundaries remain unchanged.
+
+Delegated task PORTABLE-DOCS-20260924: attempt 1, baseline 959de12, ownership README.md, README.en.md, CLAUDE.md and docs/host-adapters.md, acceptance all four accurate and consistent. The worker produced files but the runner returned a process-control PermissionError around its 180s bound. The commander confirmed no remaining external worker, reviewed the artifacts, took over final edits and accepted the result. No retry. Attribution TOOL_RELATED; the record is excluded from model suitability learning rather than penalizing a model for runtime-control uncertainty.
+
+Verified lessons: keep commander host, worker runner and model identity separate; a provider-neutral registry must not constrain effort to one vendor's enum; a default model alias hides configuration drift, so prefer explicit model/version identity for historical comparison. Evidence: adapter argv and execution tests, default-registry failure-before-dispatch test, legacy-registry regression, documented CLI interfaces. Apply when onboarding new runners; invalidate/recheck on CLI or provider changes. Next dispatch improvement: keep documentation packages bounded and reserve commander verification for actual files, not CLI exit alone. Status: reviewed; comparative cost/quality remains unmeasured.
+
+Historical evidence manifests belong to their original commits and are not rewritten to pretend older tests covered new code. Public privacy checks exclude research/, runtime ledgers, prompts, private providers and credentials.

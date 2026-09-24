@@ -249,14 +249,8 @@ class Workflow:
 
     def _execute(self, task, attempt, timeout):
         worker = attempt['worker']
-        adapter = worker['adapter']
-        command = list(adapter['command'])
-        if adapter['kind'] == 'codex_worker':
-            command += [task['workspace'], '--model', worker['model'], '--reasoning-effort', worker['reasoning_effort']]
-        elif adapter['kind'] == 'command':
-            command = [part.replace('{workspace}', task['workspace']).replace('{model}', worker['model']).replace('{reasoning_effort}', worker['reasoning_effort']) for part in command]
-        else:
-            raise ValueError('unsupported adapter kind')
+        from routing.adapters import build_command
+        command = build_command(worker, task['workspace'])
         directory = self.store.path.parent / 'runs' / task['logical_task_id'] / str(attempt['attempt_number'])
         directory.mkdir(parents=True, mode=0o700, exist_ok=False)
         prompt = {'role': 'bounded execution worker; no delegation, scope expansion or configuration changes',

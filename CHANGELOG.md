@@ -1,5 +1,12 @@
 # 变更记录 / Changelog
 
+## 2026-09-24 — Portable hosts and models
+
+- Neutral disabled-by-default registry; original GPT pool moved to an optional example.
+- Native Codex CLI and Claude Code CLI adapters, generic command runner, provider-specific effort labels.
+- Shared AGENTS.md / CLAUDE.md policy and bilingual portable setup documentation.
+- Existing local user installation is unchanged.
+
 ## 2026-09-24 — Adaptive routing
 
 - Added registry, structured profiler, conditional historical retrieval, transparent routing, outcome attribution and experience feedback.

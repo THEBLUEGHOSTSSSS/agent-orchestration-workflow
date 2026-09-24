@@ -1,6 +1,6 @@
 # 全局采用与回滚
 
-全局采用分为两部分：用户级 `AGENTS.md` 保存简短决策规则，稳定资源目录保存完整模板。无需更换现有 Worker、模型、供应商或认证配置。
+全局采用分为两部分：宿主支持的用户级指令文件保存简短决策规则（例如 Codex 的 `AGENTS.md`、Claude Code 的 `CLAUDE.md`），稳定资源目录保存完整模板。无需更换现有 Worker、模型、供应商或认证配置。
 
 ## 采用的默认行为
 
@@ -16,9 +16,9 @@
 
 由用户或指挥者执行配置修改，执行 Worker 不负责修改全局配置。
 
-1. 读取当前用户级 `AGENTS.md`，确认是否存在覆盖文件或项目级指令冲突。
+1. 读取当前宿主的用户级指令文件，确认是否存在覆盖文件或项目级指令冲突。
 2. 备份原文件，保存摘要与差异；如果已有模板资源目录，也先备份。
-3. 将本仓库的文档、模板、示例、scripts、tests、records 及引用资源复制到稳定目录，例如 `~/.codex/workflows/agent-orchestration-workflow/`，记录文件哈希。
+3. 将本仓库的文档、模板、示例、scripts、tests、records 及引用资源复制到稳定目录，例如 `~/.local/share/agent-orchestration-workflow/`，记录文件哈希。
 4. 将上述默认行为合并进用户级指令。保留原有 Worker 命令、任务模式、安全禁止项和合理的直接处理规则；格式可替换，复核、两轮上限和经验职责不可删除。
 5. 全局指令引用稳定资源目录，不能引用某个临时项目中的相对 `docs/` 路径。只在任务需要时读取模板，不在每次对话加载全部材料。
 6. 核对写入内容、引用路径、快照哈希与差异。模型、网络、凭据和运行时参数不属于此次策略调整。
@@ -35,4 +35,6 @@ JSON 可解析、引用一致、备份可恢复和文件哈希匹配属于静态
 
 ## 自适应路由安装
 
-将整个仓库快照（包括 routing/ 与 scripts/）部署到固定工作流目录，合并 AGENTS.md 中 ADAPTIVE WORKER ROUTING 段。为每个项目保持独立持久账本。私有 launcher 需支持 `WORKSPACE --model MODEL --reasoning-effort EFFORT`；先在隔离目录用 probe 任务验证。备份原 launcher、全局 AGENTS 和工作流目录；回滚时恢复备份，但必须保留已消耗任务额度，不得以回滚重置任务次数。详细操作见 [路由说明](adaptive-routing/README.md)。
+将整个仓库快照（包括 routing/ 与 scripts/）部署到固定工作流目录，合并 AGENTS.md 中 ADAPTIVE WORKER ROUTING 段。为每个项目保持独立持久账本。从 [通用注册表示例](../examples/registry.portable.json) 配置 Codex、Claude Code 或自定义 runner；无需私有 launcher，先在隔离目录验证适配器。备份原 launcher、全局 AGENTS 和工作流目录；回滚时恢复备份，但必须保留已消耗任务额度，不得以回滚重置任务次数。详细操作见 [路由说明](adaptive-routing/README.md)。
+
+CLAUDE.md 可以通过 `@AGENTS.md` 导入同目录的共享规则；不要同时维护两份互相漂移的完整策略。项目级采用请见 [宿主适配](host-adapters.md)。公开版默认禁用模板 Worker，升级已有安装时保留原注册表，显式传入原配置，不能将模板覆盖到私人可用配置。

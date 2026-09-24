@@ -11,7 +11,7 @@ import unittest
 from concurrent.futures import ThreadPoolExecutor
 from unittest.mock import patch
 
-from routing.models import load_config
+from test_selection import load_config, ORIGINAL
 from routing.service import Workflow, digest_file
 from routing.validation import validate_ledger
 from test_selection import signature
@@ -24,7 +24,7 @@ class LifecycleTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.proof = self.root / 'proof.txt'
         self.proof.write_text('verified artifact')
-        self.w = Workflow(self.root / 'state.json')
+        self.w = Workflow(self.root / 'state.json', ORIGINAL)
         self.spec = dict(task_id='T1', workspace=str(self.root), objective='bounded task',
                          baseline='test-baseline', work_key='original work', scope=['proof.txt'],
                          acceptance_criteria=[dict(id='C1', check='inspect artifact')],
@@ -117,7 +117,7 @@ class LifecycleTests(unittest.TestCase):
         for name, extra in [('renamed', {}), ('fix-task', {'parent_task_id': 'T1', 'work_key': 'fix'}), ('subtask', {'logical_task_id': 'T1', 'work_key': 'sub'})]:
             spec = dict(self.spec, task_id=name, **extra)
             self.w.create(spec)
-            fresh = Workflow(self.root / 'state.json')
+            fresh = Workflow(self.root / 'state.json', ORIGINAL)
             with self.assertRaises(ValueError): fresh.run(name, 'gpt56_sol_high')
         self.w.create(dict(self.spec, task_id='renamed-fix', work_key='fix'))
         with self.assertRaises(ValueError): self.w.reserve('renamed-fix')

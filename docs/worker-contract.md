@@ -1,6 +1,6 @@
 # 外部执行工作者契约
 
-本契约定义策略对 `codex-worker` 的最小接口和行为期望。仓库不包含该程序的实现，也不指定供应商、模型或网络端点。
+本契约定义可替换 Worker 的任务、证据和执行边界。公开版提供 Codex CLI、Claude Code CLI 和通用 command 适配；`codex-worker` 仅作为旧接口保留，不是必需依赖。详见 [宿主适配](host-adapters.md)。
 
 ## 权限与职责
 

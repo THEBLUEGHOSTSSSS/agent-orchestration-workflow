@@ -4,6 +4,7 @@ from datetime import datetime
 import json
 import math
 from pathlib import Path
+from routing.adapters import KINDS
 
 MAX_WORKER_ATTEMPTS = 2
 SIGNATURE_LABELS = ('domain', 'task_type', 'task_subtype', 'language', 'framework')
@@ -111,10 +112,8 @@ def validate_config(config):
         seen.add(w['worker_id'])
         if type(w.get('enabled')) is not bool or w.get('availability') not in ('available', 'unavailable'):
             raise ValueError('invalid availability/enabled')
-        if w['reasoning_effort'] not in ('low', 'medium', 'high', 'xhigh'):
-            raise ValueError('invalid reasoning effort')
         adapter = w.get('adapter')
-        if not isinstance(adapter, dict) or adapter.get('kind') not in ('codex_worker', 'command') or not isinstance(adapter.get('command'), list) or not adapter['command'] or any(not isinstance(a, str) or not a.strip() for a in adapter['command']):
+        if not isinstance(adapter, dict) or adapter.get('kind') not in KINDS or not isinstance(adapter.get('command'), list) or not adapter['command'] or any(not isinstance(a, str) or not a.strip() for a in adapter['command']):
             raise ValueError('adapter requires a nonempty argv command')
         caps = w.get('capabilities')
         if not isinstance(caps, list) or any(not isinstance(c, str) or not c.strip() for c in caps) or len(caps) != len(set(caps)):

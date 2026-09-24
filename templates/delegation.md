@@ -87,62 +87,12 @@ OUTPUT:
 
 ## 调用方式
 
-先确认用户提供的实现位于 `PATH`：
+配置任意受支持的 Worker 注册表，将上面的任务字段映射到 [结构化任务模板](adaptive-task.example.json)，通过统一入口派发：
 
 ```sh
-command -v codex-worker >/dev/null 2>&1 || {
-  echo "codex-worker is required but was not found on PATH" >&2
-  exit 1
-}
+python3 /path/to/workflow/scripts/route_worker.py --config /path/to/registry.json create task.json
+python3 /path/to/workflow/scripts/route_worker.py --config /path/to/registry.json route TASK_ID
+python3 /path/to/workflow/scripts/route_worker.py --config /path/to/registry.json run TASK_ID
 ```
 
-在已审查的专用工作区内调用：
-
-```sh
-cat <<'WORKER_PROMPT' | codex-worker "$PWD"
-MODE:
-GENERAL
-
-TASK ID / ATTEMPT:
-- [稳定任务 ID]
-- [1 of 2 | 2 of 2]
-
-OBJECTIVE:
-[最终结果]
-
-CONTEXT:
-[最小必要背景]
-
-BASELINE AND EXPERIENCE:
-- [当前基线]
-- [相关已验证经验及适用性；无则 none]
-
-AUTHORITY AND BUDGET:
-- [人类目标、指挥者决定和预算；Worker 总轮次固定最多 2]
-
-ESCALATION SCOPE:
-- [停止条件、保留决定和允许自主推进的范围]
-
-TASK:
-[精确执行范围]
-
-REQUIREMENTS:
-- 你已处于执行 Worker 角色，直接完成任务，不递归启动 Worker 或再次委派。
-- [必须项与禁止项]
-
-ACCEPTANCE CRITERIA:
-- [可验证完成条件]
-
-AUTONOMY:
-Perform reasonable inspect -> execute -> verify -> fix -> reverify loops
-within explicit stop conditions before returning.
-
-ATTEMPT POLICY:
-- This launch consumes the stated attempt. Two Worker rounds total; after a failed second submission, commander takeover is required.
-
-OUTPUT:
-Return a compact evidence-backed report using the required sections.
-WORKER_PROMPT
-```
-
-没有兼容可执行程序时，人工填写本模板，审查并删除敏感信息后提交给用户选择的执行系统，再由指挥者按风险复核。手动后备仍计入同一任务的两轮额度。每次返回后记录指挥者的证据、缺陷和 `accept / rework / takeover / blocked` 决定；必要检查未运行时只能阻塞。不要自动信任任意目录，也不要覆盖项目现有 `AGENTS.md` 或用户全局指令。
+Codex CLI、Claude Code 或自定义模型 runner 的接入见 [宿主适配](../docs/host-adapters.md)。无需安装私有 `codex-worker`。缺少适配器时，可将经脱敏的有界任务交给其他执行系统，但这属于受控入口之外的手动后备，必须保留同一任务两轮额度、实际证据与审核记录，不得宣称获得程序级计数保护。

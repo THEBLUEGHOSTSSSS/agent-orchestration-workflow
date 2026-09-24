@@ -2,10 +2,16 @@
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 import unittest
+from pathlib import Path
 
-from routing.models import (load_config, profile_task, validate_config,
+from routing.models import (load_config as load_public_config, profile_task, validate_config,
                             validate_diagnosis, validate_signature)
 from routing.selection import route
+
+ORIGINAL = Path(__file__).resolve().parents[1] / 'examples/registry.original.json'
+
+def load_config(path=None):
+    return load_public_config(path or ORIGINAL)
 
 NOW = datetime(2026, 9, 24, tzinfo=timezone.utc)
 

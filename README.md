@@ -1,267 +1,41 @@
 # agent-orchestration-workflow
 
-**人定方向，强模型做判断，可替换的 Worker 承担大量执行。**
+**Human → Commander → Worker：人掌握目标与最终决定，Commander 指挥并审核，可替换的 Worker 执行有界任务。**
 
-一套以高性价比为目标的 AI 协作工作流：把昂贵的推理与上下文留给架构、判断和关键复核，让适合任务的经济型执行模型完成阅读、实现、改写、测试与迭代。通过清晰分工与可追溯证据，争取用相同预算交付更多合格成果。
+这是一个与宿主工具、模型供应商无关的协作策略与可选的自适应路由实现。Commander 可以运行在 Codex、Claude Code 或其他具备相应能力的环境；Worker 后端可以独立选择。高价值判断、架构和关键复核留给 Commander；大量阅读、实现、改写、测试与自检交给合适的 Worker。小任务无需强行委派。
 
-[English](README.en.md) | [完整策略](AGENTS.md) | [工作流](docs/workflow.md) | [复核、两轮上限与经验](docs/review-and-learning.md) | [性价比与成本核算](docs/economics.md) | [Worker 接口与替换](docs/worker-contract.md) | [安全指南](docs/security.md)
+[English](README.en.md) · [完整规则](AGENTS.md) · [宿主与适配器](docs/host-adapters.md) · [审核与经验](docs/review-and-learning.md)
 
-## 自适应 Worker 路由（新增可执行层）
+## 工作闭环
 
-Task Profile → 相似历史经验 → 可解释选择 → 有界执行 → 强模型审核归因 → 经验更新。初始候选为 GPT-6 Sol/xhigh 与 GPT-5.6 Sol/high，可注册其他供应商。受控入口在调用前计数，同一逻辑任务最多两轮；模型切换不重置次数。
+1. 人确定目标、预算、授权和最终验收；Commander 确定任务边界、基线、验收条件、停止条件和可用 Worker。
+2. 路由器参考任务特征与**已审核、适用**的项目经验提出可解释的候选建议；Commander 审查并可覆盖选择。首次启动前保留执行次数。
+3. Worker 在授权范围内执行并返回制品、检查结果和不确定性；Commander **每轮**检查实际证据，记录缺陷和决定，不能凭退出码或自报验收。
+4. 同一逻辑任务最多 **两轮 Worker 执行**（首次加最多一次要求修正）；换模型、宿主或任务名称不重置额度。第二轮仍不合格时 Commander 直接修复和验证，或如实标记阻塞。
+5. 验收与项目本地经验记录均为成功交付的必要条件。失败须区分模型问题与需求、环境、工具、数据、外部服务等原因；仅经审核且适用的经验用于后续选择。
 
-[使用说明](docs/adaptive-routing/README.md) · [完整实现与验收报告](docs/adaptive-routing/IMPLEMENTATION_REPORT.md) · [修改前架构审计](docs/adaptive-routing/CURRENT_ARCHITECTURE_ASSESSMENT.md) · [注册表](routing/defaults.json)。Python 3.11+，macOS/Linux，标准库，无后台调用。真实节省率待项目数据验证。
+目标是提高单位成本下的**已验收有用成果**，不是保证省钱。主模型额度、实际费用、总 token、复核与返工成本须分开核算；没有自动节省率或跨供应商质量保证。静态记录检查不是安全沙箱，也不能替代 Commander 的实质审核。
 
-## 当前版本一览
+## 配置与使用
 
-**强模型既指挥，也审核；Worker 最多两轮；验收与经验记录缺一不可。**
+路由器要求 Python 3.11+ 和 POSIX 环境（macOS/Linux）。默认 [`routing/defaults.json`](routing/defaults.json) 仅含**禁用的中性 `worker_template`**；执行前须由人或 Commander 在自有配置中登记真实的 `provider`、`model`、`reasoning_effort`、工具能力、命令及可用状态。配置 `available` 只是操作员声明，并非实时健康检测；仓库不代管认证或私有启动器。
 
-| 环节 | 必须做什么 |
-| --- | --- |
-| 人 | 确定目标、预算与授权，保留最终决定权 |
-| 强模型指挥 | 拆解任务，明确范围、基线、验收条件和本轮停止条件 |
-| Worker 执行 | 初次执行；如被打回，最多再执行一次 |
-| 强模型审核 | 每次检查实际成果与证据；第二次仍不合格则亲自修改、验证 |
-| 验收与学习 | 记录验收判断和项目经验，后续相关任务先查阅适用经验 |
-
-上述职责不绑定 Astra、Sol 或固定供应商。小任务可以直接完成；更换 Worker 不重置同一任务的两轮额度。版本变化见 [CHANGELOG.md](CHANGELOG.md)。
-
-## 从哪里开始
-
-- **理解规则**：阅读 [审核与经验闭环](docs/review-and-learning.md)。
-- **派发一个任务**：填写 [委派模板](templates/delegation.md)，记录当前是第几轮。
-- **接收并审核成果**：使用 [交接模板](templates/handoff.md)和[经验模板](templates/experience-record.md)。
-- **检查验收记录**：按下方命令运行静态检查器。
-- **用于多个项目**：参见 [全局采用与回滚](docs/global-adoption.md)，合并已有规则，保留备份。
-
-### 静态验收检查器怎么用
-
-需要 Python 3.9+，仅使用标准库。以下命令在仓库根目录运行：
+[`examples/registry.portable.json`](examples/registry.portable.json) 包含默认禁用的 Codex CLI、Claude Code 和自定义命令示例。**复制完整 JSON 配置**到自己维护的文件，只启用并配置准备使用的条目；不要只复制 `workers` 数组而遗漏策略字段。每次路由操作均显式传入同一 `--config PATH` 和项目账本 `--state PATH`（全局选项在子命令前）：
 
 ```sh
-mkdir -p records
-cp docs/review-record.example.json records/my-task-review.json
-# 先填写真实任务、轮次、指挥者审核、验收条件与证据文件 SHA-256，再运行：
-python3 scripts/validate_review.py records/my-task-review.json --root .
+cp examples/registry.portable.json ./my-routing.json
+# 编辑自己的配置：实际 provider/model/effort、命令、能力和 enabled/availability。
+python3 scripts/route_worker.py --config ./my-routing.json --state .work/worker-routing/state.json create TASK.json
+python3 scripts/route_worker.py --config ./my-routing.json --state .work/worker-routing/state.json route TASK_ID
+python3 scripts/route_worker.py --config ./my-routing.json --state .work/worker-routing/state.json run TASK_ID
+# Commander 检查真实产物并填写 REVIEW.json；不可自动验收。
+python3 scripts/route_worker.py --config ./my-routing.json --state .work/worker-routing/state.json review TASK_ID REVIEW.json
 ```
 
-示例初始为未执行状态，直接运行应返回 `NOT ACCEPTED`、退出码 1。填写并审核完整后，静态一致性检查通过返回 0。它会检查两轮上限、接管记录、验收状态、经验文件和文件摘要；不能判断语义正确性，也不能拦截绕过它的调用。字段说明与边界见 [详细说明](docs/review-and-learning.md)。
+`TASK.json` 应基于 [`templates/adaptive-task.example.json`](templates/adaptive-task.example.json) 填写真实工作区、基线、范围和验收条件。预览 `route` 不消耗轮次，`run` 在启动前重新计算并保留轮次；保持同一项目账本。后续 `inspect`、`recover`、`takeover` 等操作同样带上原 `--config` 和 `--state`。配置样例不是即开即用的模型授权；不要用样例直接发起收费调用。
 
-检查器回归测试：`python3 -m unittest discover -s tests -v`。`records/` 中的历史验收记录绑定当时文件版本；后续修改文件后摘要不匹配是预期行为，应在对应提交核对历史记录，并为新工作建立新验收记录。
+适配器类型为 `codex_cli`、`claude_code`、通用 `command` 以及兼容旧启动器的 `codex_worker`。本机工具、模型权限和执行行为须由使用者自己核验；文本生成 API 不会仅凭注册配置获得工具能力。[宿主与适配器说明](docs/host-adapters.md) 详述输入契约、默认值与命令参数。[`examples/registry.original.json`](examples/registry.original.json) 保存早期双 GPT 预设，仅供可选的历史参考，不是默认推荐。早期的[完整实现报告](docs/adaptive-routing/IMPLEMENTATION_REPORT.md)是当时版本的快照，不作为现行配置说明。
 
-## 人在顶层的协作金字塔
+## 安全与审核边界
 
-![人处于顶层，指挥模型居中，可替换 Worker 位于执行层的金字塔](assets/orchestration-pyramid.svg)
-
-| 层级 | 核心责任 | 决定权边界 |
-| --- | --- | --- |
-| **人：目标与最终决定权** | 确定目标、价值取舍、预算和授权；接受、否决或调整成果 | 可随时修改方向、停止任务或更换模型 |
-| **指挥者：判断与组织** | 定义任务、设计方案、委派执行、审查关键证据 | 在人的授权范围内作技术决策与验收 |
-| **Worker：执行与交付** | 广泛阅读、实现、批量改写、测试、修正和报告 | 在明确范围内自主执行，不接管目标与高层决策 |
-
-人掌握最高决定权，同时允许当前主会话承担指挥者职责，在已授权范围内完成闭环。这个角色不绑定 Astra、Sol 或任何供应商；能力不足时必须如实披露并升级，不得假装已经切换模型。日常实施无需逐步审批；改变目标、超出授权或突破约定预算时，再交由人决定。指挥者的技术验收与人的最终接受是两个不同层次。
-
-## 高性价比来自怎样的分工
-
-**把每一份模型预算花在它最有价值的任务上。** 强模型负责难以替代的判断，Worker 承担大量可验证执行。高性价比主要来自四个环节：
-
-- **转移大量执行消耗**：仓库搜索、长材料阅读、编码和反复测试交给能力达标、成本合适的 Worker。
-- **压缩回传上下文**：Worker 提交证据包，指挥模型先读结论与定位，再定向检查原文。
-- **有界执行闭环**：一次执行轮次内允许检查、修正和复测，但同一逻辑任务最多只有初次执行加一次指挥者要求的返工。
-- **按风险复核**：高风险判断深入检查，低风险机械工作结合自动检查与抽样，减少重复阅读。
-
-| 工作方式 | 主要成本落点 | 更适合的情况 |
-| --- | --- | --- |
-| 主模型直接处理 | 理解、执行、迭代都消耗主模型资源 | 小任务、交互教学、难以拆分的判断任务 |
-| 指挥模型 + Worker | 主模型负责规划与复核，Worker 承担大部分执行 | 执行量大、边界清楚、结果可验证的任务 |
-
-衡量收益时，要区分**主模型额度、实际费用和全流程 token 总量**。主模型用量下降，并不代表总 token 同比例下降；额外委派、返工和复核也要计入。目标是降低每项合格成果的总成本。本仓库尚未发布对照测量，因此不承诺固定节省比例。详见[成本核算与示例](docs/economics.md)。
-
-## Worker 模型可替换，工作方法可复用
-
-Worker 是角色，`codex-worker` 是本文使用的调用入口，底层模型和供应商可以替换。可以按任务选择更擅长代码、文档、长材料处理的模型，也可以接入具备所需工具能力的本地模型；指挥模型本身同样不绑定某个品牌。
-
-```text
-人确定目标与授权
-        ↓
-指挥模型 → 统一任务与验收契约 → Worker 适配器 → 所选模型与执行工具
-        ↑                          ↓
-        └──── 交付物、证据、报告 ────┘
-```
-
-替换时保留任务边界、输入输出约定和质量标准，再用相同任务验证工具调用、文件改动、报告真实性、耗时和总成本。更换模型需要适配与验证；本仓库提供策略和契约，未附带通用模型适配器。具体步骤见[Worker 契约](docs/worker-contract.md)。
-
-## 相似社区实践
-
-社区作者 Artforartsake99 在 [Astra + 8 Deepseek 4.1 subagents. Insanely cheap tokens.](https://www.reddit.com/r/vibecoding/comments/1wg5ogw/astra_8_deepseek_41_subagents_insanely_cheap/) 中分享了 Astra 编排、DeepSeek 执行的做法。本项目的工作流此前已独立落地；在本次文档完善中，我们参考了该帖直观的角色分工表达。该帖作为相似社区实践列出，工作流本身并非源自该帖。本项目强调：**人主导目标，指挥模型管理质量，执行模型按需替换。**
-
-该帖是社区经验，不是本项目的性能证明；我们未据此推算节省率，也不要求使用 Astra、DeepSeek 或固定数量的 Worker。参考信息与证据边界见[成本说明](docs/economics.md)。
-
-本仓库是独立社区项目，采用 MIT 许可证，不是任何厂商的官方产品。
-
-## 何时委派
-
-判断标准是语义性的：**指挥模型亲自完成这一步，是否会比可靠的 Worker 产生显著更高的价值？** 短问题、小修复和交互式教学通常直接处理；大量执行与上下文处理优先委派。角色可以有多个实例，但并发数量由任务独立性、预算和整合成本决定，增加 Worker 数量本身不保证更省钱。
-
-## 必须履行的复核与学习职责
-
-每个委派任务在派发前都要有稳定任务 ID、验收条件、允许范围、基线、轮次和相关已验证经验；每次返回后都要由指挥者记录证据、缺陷及 `accept / rework / takeover / blocked` 决定。任务最多两次 Worker 执行，第二次仍失败就由指挥者接管修复、测试和复核，不得改名、换模型、换会话或调整目标版本来重置次数。每个委派任务（包括失败或阻塞）还必须形成项目本地经验记录；小型直接工作可复用一条简短项目日志，避免文书膨胀。
-
-记录格式可以是现有 issue、任务文件或本仓库模板，职责本身不可省略。详见[复核与学习政策](docs/review-and-learning.md)和[结构化交接](docs/structured-handoff.md)。另提供[静态验收检查器](scripts/validate_review.py)，检查两轮上限、接管记录、验收证据与经验文件。它不能阻止绕过检查器的调用；新版另提供显式调用的自适应路由与运行时模型切换；不提供后台调度器或知识图谱。
-
-## 六阶段生命周期
-
-```mermaid
-flowchart LR
-    A[1. 理解 Understand] --> B[2. 决策 Decide]
-    B --> C[3. 探索 Explore]
-    C --> D[4. 执行 Execute]
-    D --> E[5. 验证 Verify]
-    E --> F[6. 定稿 Finalize]
-    E -->|首次不通过：唯一一次返工| C
-    E -->|第二次不通过| T[指挥者直接修复与复核]
-    T --> E
-
-    classDef commander fill:#f4f4f4,stroke:#222,color:#111;
-    classDef worker fill:#e8f3ec,stroke:#286943,color:#111;
-    classDef shared fill:#fff1cc,stroke:#8a6500,color:#111;
-    class A,B,F commander;
-    class C,D worker;
-    class E shared;
-```
-
-1. **理解**：指挥者澄清目标、约束、受众、成功标准和外部影响。
-2. **决策**：指挥者决定技术策略、任务边界、风险等级，以及哪些工作适合委派。
-3. **探索**：工作者优先完成大范围阅读、搜索和证据提取，形成压缩后的信息包。
-4. **执行**：工作者在明确范围内实现、改写、整理或分析，并保留无关内容。
-5. **验证**：工作者做广泛检查；指挥者审查当前制品和关键证据。需要返工时只能使用剩余的一次 Worker 轮次，否则接管。
-6. **定稿**：只有指挥者按验收标准核对当前制品和经验记录后才能技术接受；人仍保留最终接受、否决和调整的决定权。
-
-详见[工作流说明](docs/workflow.md)。
-
-## 六种领域模式
-
-| 模式 | 指挥者重点 | 工作者重点 |
-| --- | --- | --- |
-| SOFTWARE | 需求、架构、API、数据、安全、最终接受 | 仓库探索、实现、调试、重构、测试、迁移 |
-| PAPER | 论文主张、贡献定位、证据含义、最终修辞 | 代码与实验核对、数字检查、术语与语言一致性 |
-| RESEARCH | 研究问题、冲突证据评价、综合结论 | 广泛取证、来源比较、事实/推断/不确定性分离 |
-| DOCUMENT | 受众、目的、结构、信息层级、最终质量 | 材料阅读、提取、起草、表格、批量改写与一致性 |
-| LEARNING | 解释、直觉、诊断误解、互动反馈 | 批量计算、练习生成、答案检查、案例收集 |
-| DECISION | 权衡、个体影响、不确定性、最终建议 | 规格、比较数据、背景事实和证据收集 |
-
-`GENERAL` 可用于不属于上述领域的普通执行任务，但应同样明确范围、风险和验收标准。
-
-## 渐进式披露
-
-面对大型仓库、长论文或广泛研究材料，不要让指挥者先吞下全部原始上下文。先让工作者生成高密度信息包，指挥者阅读压缩结果后，只对高风险结论、争议证据或必要原文做定向核查：
-
-```text
-大规模材料 -> 工作者阅读与压缩 -> 信息包 -> 指挥者判断 -> 定向原文复核
-```
-
-仓库提供[仓库情报包](templates/repository-intelligence-pack.md)、[论文审查包](templates/paper-review-pack.md)和[研究包](templates/research-pack.md)。压缩不是证据替代品；重要结论必须可追溯到具体文件、章节、命令结果或来源。
-
-## 自主执行与按风险复核
-
-每个 Worker 执行轮次应尽量覆盖完整、受限的执行循环：
-
-```text
-检查 -> 执行 -> 验证 -> 诊断失败 -> 修正 -> 重新验证 -> 自检 -> 报告
-```
-
-工作者应在预设停止条件内返回，而不是每做一步就请求指挥者介入。循环中的内部自检不另算轮次；Worker 一旦被实际启动就消耗一次轮次，执行中断或结果不确定也保守计数，等待同一个仍在运行的进程不重复计数。基础设施故障可以促使指挥者提前接管，但不能重置配额。
-
-复核强度与风险相称：身份认证、授权、安全、持久化、核心算法、论文主张和重要业务结论属于高风险，应深入检查；跨模块行为通常至少做关键路径和代表性检查；机械映射、格式化和低风险规范化可更多依赖自动检查与抽样。任何级别都不能盲信工作者报告。
-
-“已完成”必须有证据：列明改动文件、实际运行的检查、关键输出、未运行的检查、残余风险和未决判断。必要检查未运行时只能标为阻塞，不能接受。Worker 自报、退出码 `0` 或报告中的 `APPROVE` 文本都不构成验收；指挥者修复后的结果也必须重新检查，且不得虚称由第二模型独立复核。
-
-## 前提与运行方式
-
-本仓库仅包含策略、文档、模板和示例。你需要自行提供一个名为 `codex-worker` 的可执行程序，并放在 `PATH` 中。它必须：
-
-1. 将工作区路径作为第一个位置参数；
-2. 从标准输入读取完整提示；
-3. 将工作报告写到标准输出，并以非零退出码表示执行失败。
-
-先检查前提：
-
-```sh
-command -v codex-worker >/dev/null 2>&1 || {
-  echo "codex-worker is required but was not found on PATH" >&2
-  exit 1
-}
-```
-
-然后在**经过审查的专用工作区**中使用可复制命令：
-
-```sh
-cat <<'WORKER_PROMPT' | codex-worker "$PWD"
-MODE:
-SOFTWARE
-
-TASK ID / ATTEMPT:
-[稳定任务 ID] / [1 或 2；同一未解决工作总计最多两轮]
-
-BASELINE / EXPERIENCE / STOP CONDITIONS:
-[实际版本或制品基线] / [相关已验证经验或无] / [本轮时限与阻塞停止条件]
-
-OBJECTIVE:
-完成一个边界清晰、可验证的本地任务。
-
-CONTEXT:
-仅包含完成任务所需的上下文；不要包含凭据或无关私密材料。
-
-TASK:
-检查相关文件，实施范围内变更，并运行适当验证。
-
-REQUIREMENTS:
-- 保留无关内容和行为。
-- 不扩大权限或任务范围。
-- 不执行外部发布。
-
-ACCEPTANCE CRITERIA:
-- 指定行为已实现。
-- 相关检查实际通过，或明确报告未能运行及原因。
-
-AUTONOMY:
-在本轮停止条件内完成 inspect -> execute -> verify -> fix -> reverify 自检后返回。
-
-OUTPUT:
-按 worker-report 模板返回紧凑、可追溯的报告，供指挥者复核并写入项目经验记录。
-WORKER_PROMPT
-```
-
-完整字段见[委派模板](templates/delegation.md)，报告格式见[工作者报告模板](templates/worker-report.md)。
-
-如果没有兼容的可执行程序，安全的手动后备方式是：在专用工作区中复制[委派模板](templates/delegation.md)，人工删去敏感和无关内容，将经过审查的提示提交给你选择的执行系统；收到结果后，以相同风险标准人工检查文件和证据。不要用临时脚本假装兼容适配器，也不要把任意目录自动交给未知工具。
-
-## 安全边界
-
-这些说明是协作政策，**不是沙箱、权限系统或数据隔离机制**。使用第三方后端的工作者会将提交的提示和可访问材料交由该提供方处理；本地后端的网络和工具权限也需要核实。使用前必须理解其数据保留、训练、日志、地域和工具权限政策，并审查所有出站内容。
-
-不要让工作者检查 API 密钥、修改凭据、修改认证、修改 Codex 配置、修改私有工作者配置目录、递归启动另一个工作者或继续委派。敏感决策保留给指挥者。建议使用干净的专用工作区和最小权限，并在执行前确认路径与材料范围。
-
-不要在未知项目上自动信任或运行策略。若项目已有 `AGENTS.md`，先阅读、比较并人工合并适用条款；不要覆盖项目策略，也不要把本仓库策略强行安装为用户的全局指令。
-
-本地修改获准并不自动授权外部行为。推送、发起拉取请求、发布软件包、发送消息或公开仓库，应在用户授权范围内执行。已有授权持续有效，不应在执行前重复询问；正常本地编辑、检查和提交按任务范围推进。详见[安全指南](docs/security.md)。
-
-## 两轮上限与失败处理
-
-同一逻辑任务最多两次 Worker 执行：初次提交后，指挥者可以要求一次有针对性的修正；第二次仍未满足验收条件，指挥者必须直接修复、测试和复核，且可以更早接管。重命名任务、更换 Worker/模型/会话或修改目标版本，都不能为同一未解决工作重新计数。真正独立的新范围才可在记录理由和谱系后使用新任务 ID。失败不是扩大权限、忽略验收标准、跳过经验记录或虚构验证结果的理由。
-
-## 采用方式
-
-需要用于多个项目时，参见[全局采用与回滚](docs/global-adoption.md)。
-
-1. 在干净的测试工作区阅读[完整策略](AGENTS.md)和[安全指南](docs/security.md)。
-2. 将策略与你现有的项目指令逐条比较，解决冲突后再合并；不要覆盖现有 `AGENTS.md`。
-3. 从[委派模板](templates/delegation.md)开始，为任务写清任务 ID、当前轮次、目标、范围、禁止事项和证据型验收标准。
-4. 先用低风险、可回滚、无敏感数据的任务试运行。
-5. 根据报告做风险分级复核，记录决定、实际检查、残余不确定性和项目本地经验；只有当前制品与经验记录都通过指挥者检查后才交付。
-
-示例均为说明性材料，不是实际基准结果：[软件任务](examples/software-task.md)和[论文任务](examples/paper-task.md)。
-
-## 贡献与许可
-
-贡献前请阅读[CONTRIBUTING.md](CONTRIBUTING.md)。本项目以 [MIT License](LICENSE) 发布。
+任务提示、日志与账本可能包含敏感项目资料；仅向已授权的后端发送必要内容。Worker 不得改动认证、凭据、私有配置或递归委派；角色标记、任务范围和静态检查不构成操作系统隔离。高级架构、安全和数据策略决策由 Commander 在人的授权内承担。参考[审核与学习规则](docs/review-and-learning.md)、[Worker 契约](docs/worker-contract.md)与[安全指南](docs/security.md)。

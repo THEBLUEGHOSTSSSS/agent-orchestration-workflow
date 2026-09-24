@@ -4,7 +4,77 @@
   "currency": "USD",
   "workers": [
     {
-      "worker_id": "worker_template",
+      "worker_id": "codex_runner",
+      "provider": "configured_codex_provider",
+      "model": "default",
+      "reasoning_effort": "default",
+      "version": "unspecified",
+      "enabled": false,
+      "availability": "unavailable",
+      "adapter": {
+        "kind": "codex_cli",
+        "command": [
+          "codex"
+        ]
+      },
+      "capabilities": [
+        "coding",
+        "documentation",
+        "tools",
+        "reasoning"
+      ],
+      "cost_profile": {
+        "currency": null,
+        "estimated_cost": null
+      },
+      "latency_profile": {
+        "estimated_seconds": null
+      },
+      "prior": {
+        "base": 0.5,
+        "domain_preferences": {},
+        "task_type_preferences": {},
+        "reasoning_intensity_preferences": {}
+      },
+      "manual_notes": "Configure an authenticated tool-capable adapter and enable explicitly; no provider or model preference."
+    },
+    {
+      "worker_id": "claude_runner",
+      "provider": "configured_claude_provider",
+      "model": "default",
+      "reasoning_effort": "default",
+      "version": "unspecified",
+      "enabled": false,
+      "availability": "unavailable",
+      "adapter": {
+        "kind": "claude_code",
+        "command": [
+          "claude"
+        ]
+      },
+      "capabilities": [
+        "coding",
+        "documentation",
+        "tools",
+        "reasoning"
+      ],
+      "cost_profile": {
+        "currency": null,
+        "estimated_cost": null
+      },
+      "latency_profile": {
+        "estimated_seconds": null
+      },
+      "prior": {
+        "base": 0.5,
+        "domain_preferences": {},
+        "task_type_preferences": {},
+        "reasoning_intensity_preferences": {}
+      },
+      "manual_notes": "Configure an authenticated tool-capable adapter and enable explicitly; no provider or model preference."
+    },
+    {
+      "worker_id": "custom_runner",
       "provider": "your_provider",
       "model": "your_model",
       "reasoning_effort": "default",
