@@ -6,6 +6,12 @@
 
 [English](README.en.md) | [完整策略](AGENTS.md) | [工作流](docs/workflow.md) | [复核、两轮上限与经验](docs/review-and-learning.md) | [性价比与成本核算](docs/economics.md) | [Worker 接口与替换](docs/worker-contract.md) | [安全指南](docs/security.md)
 
+## 自适应 Worker 路由（新增可执行层）
+
+Task Profile → 相似历史经验 → 可解释选择 → 有界执行 → 强模型审核归因 → 经验更新。初始候选为 GPT-6 Sol/xhigh 与 GPT-5.6 Sol/high，可注册其他供应商。受控入口在调用前计数，同一逻辑任务最多两轮；模型切换不重置次数。
+
+[使用说明](docs/adaptive-routing/README.md) · [完整实现与验收报告](docs/adaptive-routing/IMPLEMENTATION_REPORT.md) · [修改前架构审计](docs/adaptive-routing/CURRENT_ARCHITECTURE_ASSESSMENT.md) · [注册表](routing/defaults.json)。Python 3.11+，macOS/Linux，标准库，无后台调用。真实节省率待项目数据验证。
+
 ## 当前版本一览
 
 **强模型既指挥，也审核；Worker 最多两轮；验收与经验记录缺一不可。**
@@ -101,7 +107,7 @@ Worker 是角色，`codex-worker` 是本文使用的调用入口，底层模型�
 
 每个委派任务在派发前都要有稳定任务 ID、验收条件、允许范围、基线、轮次和相关已验证经验；每次返回后都要由指挥者记录证据、缺陷及 `accept / rework / takeover / blocked` 决定。任务最多两次 Worker 执行，第二次仍失败就由指挥者接管修复、测试和复核，不得改名、换模型、换会话或调整目标版本来重置次数。每个委派任务（包括失败或阻塞）还必须形成项目本地经验记录；小型直接工作可复用一条简短项目日志，避免文书膨胀。
 
-记录格式可以是现有 issue、任务文件或本仓库模板，职责本身不可省略。详见[复核与学习政策](docs/review-and-learning.md)和[结构化交接](docs/structured-handoff.md)。另提供[静态验收检查器](scripts/validate_review.py)，检查两轮上限、接管记录、验收证据与经验文件。它不能阻止绕过检查器的调用；本仓库未提供自动调度器、运行时模型切换或知识图谱。
+记录格式可以是现有 issue、任务文件或本仓库模板，职责本身不可省略。详见[复核与学习政策](docs/review-and-learning.md)和[结构化交接](docs/structured-handoff.md)。另提供[静态验收检查器](scripts/validate_review.py)，检查两轮上限、接管记录、验收证据与经验文件。它不能阻止绕过检查器的调用；新版另提供显式调用的自适应路由与运行时模型切换；不提供后台调度器或知识图谱。
 
 ## 六阶段生命周期
 

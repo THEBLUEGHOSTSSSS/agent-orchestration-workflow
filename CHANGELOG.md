@@ -1,5 +1,12 @@
 # 变更记录 / Changelog
 
+## 2026-09-24 — Adaptive routing
+
+- Added registry, structured profiler, conditional historical retrieval, transparent routing, outcome attribution and experience feedback.
+- Added locked pre-launch two-attempt lifecycle, model-switch handoff, commander takeover and static validation.
+- Added A–M scenario coverage and live adapter probes; economic benefits remain unmeasured.
+- Documented policy and same-user bypass boundaries; no daemon or recursive workers.
+
 ## 2026-09-23：强模型审核与经验闭环
 
 - 明确强模型的指挥、审核和技术验收职责；角色不绑定 Astra、Sol 或固定供应商。

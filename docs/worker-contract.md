@@ -119,3 +119,7 @@ API 服务与本地模型只是概念上的候选后端；没有实际工具集�
 若 `codex-worker` 不存在或不兼容，不要下载未知程序、自动信任任意目录或临时创建未经审查的运行适配器。可在干净的专用工作区人工准备同一提示，删除敏感和无关内容，将其交给用户自行选择的执行系统，然后按本契约人工检查返回文件和证据。
 
 该契约只定义协作预期，不是沙箱。实际文件访问、网络、数据保留和模型训练边界由工作者实现及第三方提供方决定。
+
+## 自适应路由 adapter
+
+新版受控入口见 [路由说明](adaptive-routing/README.md)。`codex_worker` adapter 要求额外支持 `--model` 和 `--reasoning-effort`，保留 workspace 参数与 stdin 任务输入。其他实现通过 registry 的 `command` argv adapter 接入。adapter 本身不拥有重试额度，所有新执行都须经稳定账本。凭证和供应商 launcher 仍不属于公开仓库。

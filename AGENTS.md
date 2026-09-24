@@ -587,6 +587,46 @@ RECOMMENDED NEXT ACTION
 
 Do not request giant raw transcripts unless necessary.
 
+
+--------------------------------------------------
+ADAPTIVE WORKER ROUTING WITH EXPERIENCE FEEDBACK
+--------------------------------------------------
+
+For bounded delegated work, use the controlled routing entry point when
+available: python3 ROUTER/scripts/route_worker.py. ROUTER is this repository
+or its installed workflow directory. See docs/adaptive-routing/README.md.
+This section supersedes the legacy direct-launch example for normal dispatch.
+Direct launcher use bypasses runtime attempt accounting; disclose a routing
+failure and preserve the same recorded allowance before any fallback.
+
+The commander profiles task semantics and repository constraints, creates a
+stable work_key/logical task with original scope and acceptance criteria,
+consults the router's similar reviewed experience and registered candidates,
+then approves its explainable choice or explicitly overrides it. Human worker
+selection takes precedence. No model has permanent priority. Initial priors
+are gpt-6-sol/xhigh and gpt-5.6-sol/high; capability and experience govern fit.
+
+Use one persistent project-local ledger across sessions. run reserves a round
+before launch. Every result requires actual commander review, evidence and
+outcome attribution. Only model-related failures are negative capability
+signals. Keep service/environment/spec/tool/data failures out of suitability
+learning. Probes and synthetic tests are not real project performance data.
+Record actual costs when known, otherwise null; include commander repair
+burden and verification confidence when assessing economic value.
+
+An approved second execution may retain or replace a worker, with complete
+handoff, but MUST keep logical identity and attempt count. After two failed
+executions, commander repairs and validates directly. No renamed/fix/subtask,
+new model/session or alternate ledger may circumvent this rule. Worker role
+cannot create other workers or accept its own work. Review and project-local
+experience remain mandatory; do not write user-level memories implicitly.
+
+The router enforces state transitions only for calls through its controlled
+entry with an intact ledger. It is not an OS sandbox, semantic task-identity
+oracle, authenticated reviewer or global interception of all model calls.
+Scope obedience, truthful attribution and unknown semantic aliases retain
+policy/review boundaries. Never claim these are programmatically guaranteed.
+
 --------------------------------------------------
 DELEGATION COMMAND
 --------------------------------------------------

@@ -1,0 +1,40 @@
+{
+  "task_id": "T42",
+  "workspace": "/REPLACE/WITH/PROJECT",
+  "baseline": "REPLACE_WITH_COMMIT_OR_HASH",
+  "work_key": "stable-description-of-original-work",
+  "objective": "REPLACE_WITH_BOUNDED_OBJECTIVE",
+  "scope": [
+    "result.txt"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "C1",
+      "check": "REPLACE_WITH_ACTUAL_CHECK"
+    }
+  ],
+  "task_signature": {
+    "domain": "coding",
+    "task_type": "implementation",
+    "task_subtype": "backend",
+    "language": "python",
+    "framework": "stdlib",
+    "complexity": "medium",
+    "reasoning_intensity": "medium",
+    "tool_intensity": "medium",
+    "risk_level": "medium",
+    "cross_module_scope": "medium",
+    "estimated_execution_volume": "medium",
+    "verification_strength": "strong",
+    "scope": "multi_file",
+    "environment": "local",
+    "required_capabilities": [
+      "coding"
+    ]
+  },
+  "repo_context": {
+    "constraints": "REPLACE"
+  },
+  "original_plan": "REPLACE",
+  "source_kind": "real"
+}

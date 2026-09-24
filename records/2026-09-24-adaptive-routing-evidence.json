@@ -1,0 +1,54 @@
+{
+  "baseline": "02d975a",
+  "date": "2026-09-24",
+  "verification": {
+    "unittest": {
+      "command": "python3 -m unittest discover -s tests -v",
+      "tests": 46,
+      "passed": 46,
+      "exit_code": 0
+    },
+    "compileall": {
+      "exit_code": 0
+    },
+    "git_diff_check": {
+      "exit_code": 0
+    },
+    "probe_ledger_static_check": "passed"
+  },
+  "live_probes": [
+    {
+      "worker": "gpt6_sol_xhigh",
+      "artifact_pass": true,
+      "exit_code": 0,
+      "duration_seconds": 21.15447733300971,
+      "source_kind": "probe"
+    },
+    {
+      "worker": "gpt56_sol_high",
+      "artifact_pass": true,
+      "exit_code": 0,
+      "duration_seconds": 13.131123333005235,
+      "source_kind": "probe"
+    }
+  ],
+  "limits": [
+    "probes excluded from suitability learning",
+    "cost unknown",
+    "requested backend not independently attested"
+  ],
+  "files": {
+    "routing/__init__.py": "b6dc4910ed4e124478d7305f0929b642e839af7e90954eb0534afe962f6f9846",
+    "routing/defaults.json": "af499fa7de2b28a6dd0744bd704e605f1dc476d928a8ccb26e545cf5f7109a76",
+    "routing/models.py": "537d7262001ca97dcab0b1fad4c4036492acfddd9937bf05cc9bef2d4ea8ecee",
+    "routing/selection.py": "adbfddf4f3b0f8e81192b4cb9ad9f2c9a4326a20d8145178cd080d514e361389",
+    "routing/service.py": "f3af1a590f9915f37250e9d8c878de63d1fea13b7ce288f8e767c34c323c02c7",
+    "routing/store.py": "0b7f6230529033bad80e09387c9fdcfeb92182194a64398954b1629304c58826",
+    "routing/validation.py": "44db54b533d67ea9344c473b129f482d34625e2564745afe1ab7e71c18a9e5b2",
+    "scripts/route_worker.py": "029c81b5fb77d8870eb94a04cff03204457b822519d8496702a4d18f2f85e6fd",
+    "scripts/validate_review.py": "262c0ad2a388e1eaab476e2ae72f76ae41c771b9367fb103a49800f5e68ffbc2",
+    "tests/test_routing_workflow.py": "750369ff99139aa6f163ce8a211a9d2739d27b4c37521e4ed5185f3950e774b8",
+    "tests/test_selection.py": "2829af9616a62cdd52b168d43ea2ef36b1c4544e7e0ba85a4fb2f33922be3aa4",
+    "tests/test_validate_review.py": "81ed660107c111eba4ac778683c08d50b43760852ae0f9268bf0460fc49b11d5"
+  }
+}

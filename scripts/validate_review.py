@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 
 
@@ -93,9 +94,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('record', type=Path)
     parser.add_argument('--root', type=Path, default=Path.cwd())
+    parser.add_argument('--routing-ledger', action='store_true', help='Check adaptive routing ledger instead of a legacy final review')
     args = parser.parse_args()
     try:
-        errors = validate(json.loads(args.record.read_text()), args.root)
+        record = json.loads(args.record.read_text())
+        if args.routing_ledger:
+            sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+            from routing.validation import validate_ledger
+            errors = validate_ledger(record)
+        else:
+            errors = validate(record, args.root)
     except (OSError, ValueError, RuntimeError) as exc:
         errors = [str(exc)]
     if errors:

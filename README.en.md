@@ -6,6 +6,12 @@ A workflow designed for high cost-effectiveness: reserve expensive reasoning and
 
 [中文](README.md) | [Policy](AGENTS.md) | [Workflow](docs/workflow.md) | [Review and learning](docs/review-and-learning.md) | [Economics](docs/economics.md) | [Worker contract](docs/worker-contract.md) | [Security](docs/security.md)
 
+## Adaptive Worker Routing with Experience Feedback
+
+An executable Python 3.11+ / POSIX layer now profiles tasks, retrieves reviewed conditional experience, selects registered workers, reserves attempts before launch, and records commander review and attribution. Model switches preserve the two-attempt budget. No background calls, automatic acceptance, or claimed universal savings.
+
+[Usage](docs/adaptive-routing/README.md) · [Architecture and validation report](docs/adaptive-routing/IMPLEMENTATION_REPORT.md) · [Registry](routing/defaults.json). The private worker launcher is not distributed.
+
 ## Current workflow at a glance
 
 **The strong commander both directs and reviews. Workers get at most two rounds. Acceptance and project learning are mandatory.**
