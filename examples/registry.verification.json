@@ -1,0 +1,330 @@
+{
+  "max_worker_attempts": 2,
+  "routing_mode": "AUTO",
+  "currency": "USD",
+  "workers": [
+    {
+      "worker_id": "codex_runner",
+      "provider": "configured_codex_provider",
+      "model": "default",
+      "reasoning_effort": "default",
+      "version": "unspecified",
+      "enabled": false,
+      "availability": "unavailable",
+      "adapter": {
+        "kind": "codex_cli",
+        "command": [
+          "codex"
+        ]
+      },
+      "capabilities": [
+        "coding",
+        "documentation",
+        "tools",
+        "reasoning"
+      ],
+      "cost_profile": {
+        "currency": null,
+        "estimated_cost": null
+      },
+      "latency_profile": {
+        "estimated_seconds": null
+      },
+      "prior": {
+        "base": 0.5,
+        "domain_preferences": {},
+        "task_type_preferences": {},
+        "reasoning_intensity_preferences": {}
+      },
+      "manual_notes": "Configure an authenticated tool-capable adapter and enable explicitly; no provider or model preference."
+    },
+    {
+      "worker_id": "claude_runner",
+      "provider": "configured_claude_provider",
+      "model": "default",
+      "reasoning_effort": "default",
+      "version": "unspecified",
+      "enabled": false,
+      "availability": "unavailable",
+      "adapter": {
+        "kind": "claude_code",
+        "command": [
+          "claude"
+        ]
+      },
+      "capabilities": [
+        "coding",
+        "documentation",
+        "tools",
+        "reasoning"
+      ],
+      "cost_profile": {
+        "currency": null,
+        "estimated_cost": null
+      },
+      "latency_profile": {
+        "estimated_seconds": null
+      },
+      "prior": {
+        "base": 0.5,
+        "domain_preferences": {},
+        "task_type_preferences": {},
+        "reasoning_intensity_preferences": {}
+      },
+      "manual_notes": "Configure an authenticated tool-capable adapter and enable explicitly; no provider or model preference."
+    },
+    {
+      "worker_id": "custom_runner",
+      "provider": "your_provider",
+      "model": "your_model",
+      "reasoning_effort": "default",
+      "version": "unspecified",
+      "enabled": false,
+      "availability": "unavailable",
+      "adapter": {
+        "kind": "command",
+        "command": [
+          "your-worker-adapter"
+        ]
+      },
+      "capabilities": [
+        "coding",
+        "documentation",
+        "tools",
+        "reasoning"
+      ],
+      "cost_profile": {
+        "currency": null,
+        "estimated_cost": null
+      },
+      "latency_profile": {
+        "estimated_seconds": null
+      },
+      "prior": {
+        "base": 0.5,
+        "domain_preferences": {},
+        "task_type_preferences": {},
+        "reasoning_intensity_preferences": {}
+      },
+      "manual_notes": "Configure an authenticated tool-capable adapter and enable explicitly; no provider or model preference."
+    }
+  ],
+  "policy": {
+    "similarity_threshold": 0.46,
+    "recency_half_life_days": 90,
+    "recency_window_days": 365,
+    "version_discount": 0.5,
+    "shrinkage_samples": 4,
+    "confidence_medium_samples": 4,
+    "confidence_high_samples": 12,
+    "exploration_gap": 0.075,
+    "exploration_max_samples": 3,
+    "failure_penalty": 0.16,
+    "cost_penalty": 0.04,
+    "latency_penalty": 0.02,
+    "repair_penalty": 0.05,
+    "task_type_groups": [
+      [
+        "routine_coding",
+        "implementation",
+        "bugfix",
+        "refactoring",
+        "large_execution"
+      ],
+      [
+        "algorithms",
+        "numerics",
+        "concurrency",
+        "invariants",
+        "reasoning"
+      ],
+      [
+        "documentation",
+        "writing",
+        "editing"
+      ]
+    ],
+    "failure_severity": {
+      "none": 0,
+      "low": 0.25,
+      "medium": 0.6,
+      "high": 1
+    },
+    "failure_type_weights": {
+      "FORMATTING_ERROR": 0.25,
+      "LOCAL_IMPLEMENTATION_ERROR": 0.5,
+      "INCOMPLETE_EXECUTION": 0.6,
+      "REASONING_FAILURE": 1,
+      "ARCHITECTURE_FAILURE": 1,
+      "LOOP_BEHAVIOR": 1,
+      "CONTEXT_HANDLING_FAILURE": 1,
+      "ALGORITHM_FAILURE": 1,
+      "INVARIANT_FAILURE": 1
+    },
+    "default_failure_type_weight": 0.75,
+    "repair_quality_penalty": 0.5,
+    "exploration_enabled": true,
+    "similarity_weights": {
+      "domain": 0.19,
+      "task_type": 0.21,
+      "related_task_type": 0.12,
+      "task_subtype": 0.1,
+      "language": 0.07,
+      "framework": 0.05,
+      "scope": 0.06,
+      "complexity": 0.05,
+      "tool_intensity": 0.05,
+      "cross_module_scope": 0.04,
+      "estimated_execution_volume": 0.03,
+      "reasoning_intensity": 0.04,
+      "risk_level": 0.06,
+      "verification_strength": 0.05
+    }
+  },
+  "execution_timeout_seconds": 300,
+  "verification": {
+    "weights": {
+      "complexity": 1,
+      "uncertainty": 1,
+      "business_impact": 1,
+      "irreversibility": 1,
+      "security_risk": 1,
+      "external_side_effects": 1,
+      "worker_historical_failure_rate": 1,
+      "verification_difficulty": 1
+    },
+    "thresholds": {
+      "medium": 0.25,
+      "high": 0.5,
+      "critical": 0.75
+    },
+    "tiers": {
+      "LOW": {
+        "reviewers": 0,
+        "adversarial_review": false,
+        "human_approval": false
+      },
+      "MEDIUM": {
+        "reviewers": 1,
+        "adversarial_review": false,
+        "human_approval": false
+      },
+      "HIGH": {
+        "reviewers": 2,
+        "adversarial_review": false,
+        "human_approval": false
+      },
+      "CRITICAL": {
+        "reviewers": 2,
+        "adversarial_review": true,
+        "human_approval": true
+      }
+    },
+    "reviewers": [
+      {
+        "reviewer_id": "gpt_reviewer",
+        "provider": "openai",
+        "family": "gpt",
+        "model_id": "gpt-REPLACE-WITH-AVAILABLE-MODEL",
+        "enabled": false,
+        "roles_supported": [
+          "requirements_reviewer",
+          "correctness_reviewer",
+          "code_reviewer",
+          "security_reviewer",
+          "architecture_reviewer",
+          "adversarial_reviewer",
+          "ux_reviewer",
+          "business_reviewer",
+          "evidence_reviewer"
+        ],
+        "capabilities": [
+          "code",
+          "requirements",
+          "evidence"
+        ],
+        "cost_class": "medium",
+        "latency_class": "medium",
+        "adapter": {
+          "kind": "openrouter",
+          "api_key_env": "OPENROUTER_API_KEY",
+          "max_output_tokens": 1800
+        },
+        "max_cost_usd": 0.15,
+        "max_tokens": 8000,
+        "timeout_seconds": 45
+      },
+      {
+        "reviewer_id": "claude_reviewer",
+        "provider": "anthropic",
+        "family": "claude",
+        "model_id": "claude-REPLACE-WITH-AVAILABLE-MODEL",
+        "enabled": false,
+        "roles_supported": [
+          "requirements_reviewer",
+          "correctness_reviewer",
+          "code_reviewer",
+          "security_reviewer",
+          "architecture_reviewer",
+          "adversarial_reviewer",
+          "ux_reviewer",
+          "business_reviewer",
+          "evidence_reviewer"
+        ],
+        "capabilities": [
+          "code",
+          "requirements",
+          "evidence"
+        ],
+        "cost_class": "medium",
+        "latency_class": "medium",
+        "adapter": {
+          "kind": "openrouter",
+          "api_key_env": "OPENROUTER_API_KEY",
+          "max_output_tokens": 1800
+        },
+        "max_cost_usd": 0.15,
+        "max_tokens": 8000,
+        "timeout_seconds": 45
+      }
+    ],
+    "risk_floors": {
+      "security_risk": {
+        "threshold": 0.75,
+        "tier": "HIGH"
+      },
+      "irreversibility": {
+        "threshold": 0.9,
+        "tier": "CRITICAL"
+      },
+      "external_side_effects": {
+        "threshold": 0.9,
+        "tier": "HIGH"
+      }
+    },
+    "max_revision_rounds": 1,
+    "budgets": {
+      "max_total_cost": 2,
+      "max_total_tokens": 40000,
+      "max_wall_time": 600,
+      "max_reviewer_calls": 6
+    },
+    "history": {
+      "min_samples": 4,
+      "half_life_days": 90
+    },
+    "selection_weights": {
+      "reliability": 0.45,
+      "independence": 0.25,
+      "diversity": 0.15,
+      "cost": 0.075,
+      "latency": 0.075
+    },
+    "judge": {
+      "min_confidence": 0.5,
+      "high_scrutiny_confidence": 0.7,
+      "worker_failure_scrutiny_threshold": 0.4,
+      "min_reliability": 0.4
+    }
+  }
+}

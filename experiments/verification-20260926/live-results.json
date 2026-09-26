@@ -1,0 +1,159 @@
+[
+  {
+    "stage": "hidden_bug",
+    "requested_model": "openai/gpt-6-sol",
+    "source_kind": "probe",
+    "report": {
+      "status": "REPORTED",
+      "result": {
+        "verdict": "FAIL",
+        "confidence": 1.0,
+        "issues": [
+          {
+            "id": "C1-incorrect-operation",
+            "severity": "high",
+            "description": "add subtracts b from a instead of adding it, so it fails the required behavior whenever b is nonzero.",
+            "evidence": [
+              "maths.py defines add(a,b) as `return a-b`.",
+              "For example, add(2,3) evaluates to -1, but the required sum is 5."
+            ]
+          }
+        ],
+        "evidence": [
+          "The import check passed, but it ran no numerical assertions."
+        ],
+        "recommended_action": "minor_fix",
+        "reviewer_specialty": "correctness_reviewer"
+      },
+      "usage": {
+        "cost_usd": 0.002674,
+        "total_tokens": 569
+      },
+      "duration_seconds": 8.001142,
+      "resolved_model": "openai/gpt-6-sol",
+      "error_code": null
+    }
+  },
+  {
+    "stage": "hidden_bug",
+    "requested_model": "anthropic/claude-haiku-4.5",
+    "source_kind": "probe",
+    "report": {
+      "status": "REPORTED",
+      "result": {
+        "verdict": "FAIL",
+        "confidence": 0.99,
+        "issues": [
+          {
+            "id": "FUNC_INCORRECT_OP",
+            "severity": "critical",
+            "description": "Function implements subtraction (a-b) instead of addition (a+b), directly violating acceptance criterion C1",
+            "evidence": [
+              "Code line: 'return a-b' uses subtraction operator '-' instead of addition operator '+'",
+              "C1 requires: add(a,b) == a + b (mathematical sum)",
+              "Actual behavior: add(a,b) == a - b (mathematical difference)"
+            ]
+          },
+          {
+            "id": "FAIL_POS_INTEGERS",
+            "severity": "critical",
+            "description": "Function fails for positive integers: add(2,3) returns -1 instead of 5",
+            "evidence": [
+              "Test case: a=2, b=3 → returns 2-3=-1, expected 2+3=5",
+              "Deterministic counterexample to C1"
+            ]
+          },
+          {
+            "id": "FAIL_NEG_INTEGERS",
+            "severity": "critical",
+            "description": "Function fails for negative integers: add(-2,-3) returns 1 instead of -5",
+            "evidence": [
+              "Test case: a=-2, b=-3 → returns -2-(-3)=1, expected -2+(-3)=-5",
+              "Deterministic counterexample to C1"
+            ]
+          },
+          {
+            "id": "FAIL_ZERO_INTEGERS",
+            "severity": "critical",
+            "description": "Function fails for zero: add(5,0) returns 5 (correct by accident) but add(0,5) returns -5 instead of 5",
+            "evidence": [
+              "Test case: a=0, b=5 → returns 0-5=-5, expected 0+5=5",
+              "Asymmetry shows fundamental operator error, not edge case handling issue"
+            ]
+          }
+        ],
+        "evidence": [
+          "Syntax check passed (import status), but no numerical assertions were run per check summary",
+          "Source code shows subtraction operator '-' on line 2, not addition operator '+'",
+          "Implementation is deterministically incorrect for all input classes specified in C1",
+          "One-character fix required: change '-' to '+' on return statement"
+        ],
+        "recommended_action": "minor_fix",
+        "reviewer_specialty": "correctness_reviewer"
+      },
+      "usage": {
+        "cost_usd": 0.003611,
+        "total_tokens": 1047
+      },
+      "duration_seconds": 7.933511,
+      "resolved_model": "anthropic/claude-haiku-4.5",
+      "error_code": null
+    }
+  },
+  {
+    "stage": "corrected",
+    "requested_model": "openai/gpt-6-sol",
+    "source_kind": "probe",
+    "report": {
+      "status": "REPORTED",
+      "result": {
+        "verdict": "PASS",
+        "confidence": 0.99,
+        "issues": [],
+        "evidence": [
+          "maths.py defines add(a,b) as `return a+b`, which produces the mathematical sum for positive, negative, and zero Python integers.",
+          "The import check passed; it did not run numerical assertions."
+        ],
+        "recommended_action": "accept",
+        "reviewer_specialty": "correctness_reviewer"
+      },
+      "usage": {
+        "cost_usd": 0.002064,
+        "total_tokens": 512
+      },
+      "duration_seconds": 4.004555,
+      "resolved_model": "openai/gpt-6-sol",
+      "error_code": null
+    }
+  },
+  {
+    "stage": "corrected",
+    "requested_model": "anthropic/claude-haiku-4.5",
+    "source_kind": "probe",
+    "report": {
+      "status": "REPORTED",
+      "result": {
+        "verdict": "PASS",
+        "confidence": 0.99,
+        "issues": [],
+        "evidence": [
+          "Implementation uses Python's native integer addition operator (+), which is mathematically correct for all integer ranges",
+          "Function signature matches requirement: add(a,b) takes two parameters",
+          "Return statement directly returns a+b, satisfying C1 for positive integers (e.g., add(2,3)=5), negative integers (e.g., add(-2,-3)=-5), mixed signs (e.g., add(5,-3)=2), and zero cases (e.g., add(0,0)=0)",
+          "Python integers have arbitrary precision, so no overflow edge cases exist",
+          "No syntax errors present; module imports successfully",
+          "Implementation is deterministic and stateless"
+        ],
+        "recommended_action": "accept",
+        "reviewer_specialty": "correctness_reviewer"
+      },
+      "usage": {
+        "cost_usd": 0.001561,
+        "total_tokens": 641
+      },
+      "duration_seconds": 3.736102,
+      "resolved_model": "anthropic/claude-haiku-4.5",
+      "error_code": null
+    }
+  }
+]

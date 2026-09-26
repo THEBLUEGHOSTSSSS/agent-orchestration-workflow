@@ -1,0 +1,31 @@
+{
+  "source_kind": "probe",
+  "n": 18,
+  "exact_match": 16,
+  "errors": [
+    {
+      "id": "C06",
+      "expected": "insufficient",
+      "predicted": "contradicted",
+      "confidence": 0.49
+    },
+    {
+      "id": "C12",
+      "expected": "insufficient",
+      "predicted": "contradicted",
+      "confidence": 0.92
+    }
+  ],
+  "unsupported_false_support": 0,
+  "unsupported_count": 12,
+  "jev_cost_usd": 0.000298074,
+  "jev_latency_seconds": 0.877886,
+  "baseline_api_status": "RESUMED_OK",
+  "paired_llm_comparison_completed": true,
+  "commander_review_items_without_jev": 18,
+  "commander_review_items_with_jev": 18,
+  "measured_commander_time_saving": null,
+  "measured_total_cost_saving": null,
+  "comparison_report": "comparison.json",
+  "historical_blocker": "Two previous baseline failures retained; user confirmed top-up and explicitly resumed evaluation."
+}

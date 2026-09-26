@@ -1,0 +1,95 @@
+{
+  "logical_task_id": "JEV-AB-01",
+  "items": [
+    {
+      "id": "C01",
+      "claim": "当 worker_attempt_count 已达到 MAX_WORKER_ATTEMPTS 时，_ready 拒绝执行。",
+      "evidence": "    def _ready(task):\n        if task['worker_attempt_count'] >= MAX_WORKER_ATTEMPTS:\n            raise ValueError('two worker attempts exhausted; strong commander takeover only')\n        if task['status'] not in ('READY', 'RETRY_READY'):\n            raise ValueError('task must be ready or reviewed and explicitly approved for retry')"
+    },
+    {
+      "id": "C02",
+      "claim": "commander_only 允许 ADAPTIVE_WORKER_ROLE 等于 worker 的调用者继续执行。",
+      "evidence": "def commander_only():\n    if os.environ.get(ROLE_ENV) == 'worker':\n        raise PermissionError('worker cannot create, route, dispatch, review or reset tasks')"
+    },
+    {
+      "id": "C03",
+      "claim": "这个代码片段证明真实 Claude Code 后端已通过端到端执行测试。",
+      "evidence": "def build_command(worker, workspace):\n    adapter = worker['adapter']\n    command = list(adapter['command'])\n    model, effort = worker['model'], worker['reasoning_effort']\n    if adapter['kind'] == 'command':\n        values = {'workspace': workspace, 'model': model, 'reasoning_effort': effort}\n        # Single pass: replacement values cannot introduce additional placeholders.\n        import re\n        return [re.sub(r'\\{(workspace|model|reasoning_effort)\\}', lambda m: values[m[1]], part) for part in command]\n    if adapter['kind'] == 'codex_worker':\n        command.append(workspace)\n        if model != 'default': command += ['--model', model]\n        if effort != 'default': command += ['--reasoning-effort', effort]\n    elif adapter['kind'] == 'codex_cli':\n        command += ['exec', '--sandbox', 'workspace-write', '--json']\n        if model != 'default': command += ['--model', model]\n        if effort != 'default': command += ['--config', 'model_reasoning_effort=' + json.dumps(effort)]\n        command.append('-')\n    elif adapter['kind'] == 'claude_code':\n        command += ['--print', '--output-format', 'json']\n        if model != 'default': command += ['--model', model]\n        if effort != 'default': command += ['--effort', effort]\n    else:\n        raise ValueError('unsupported adapter kind')\n    return command"
+    },
+    {
+      "id": "C04",
+      "claim": "证据文件哈希不匹配时，evidence_checked 会抛出错误。",
+      "evidence": "def evidence_checked(refs, workspace):\n    if not isinstance(refs, list) or not refs:\n        raise ValueError('commander evidence references required')\n    root = Path(workspace).resolve()\n    for ref in refs:\n        if not isinstance(ref, dict):\n            raise ValueError('invalid evidence reference')\n        raw = require_text(ref.get('path'), 'evidence path')\n        path = (root / raw).resolve()\n        if Path(raw).is_absolute() or not path.is_relative_to(root) or not path.is_file():\n            raise ValueError('evidence must be an existing file inside workspace')\n        if digest_file(path) != ref.get('sha256'):\n            raise ValueError('evidence hash mismatch')\n    return deepcopy(refs)"
+    },
+    {
+      "id": "C05",
+      "claim": "账本 JSON 损坏后，_load 自动重置为空账本并继续。",
+      "evidence": "    def _load(self):\n        if not self.path.exists():\n            return empty_state()\n        try:\n            state = json.loads(self.path.read_text(), parse_constant=lambda v: (_ for _ in ()).throw(ValueError(v)))\n            return check_state(state)\n        except (ValueError, TypeError, KeyError, AttributeError) as exc:\n            raise StateError(f'ledger invalid; manual investigation required: {exc}') from exc"
+    },
+    {
+      "id": "C06",
+      "claim": "默认 worker_template 的实际后端近期可用率达到 99.9%。",
+      "evidence": "[\n  {\n    \"worker_id\": \"worker_template\",\n    \"provider\": \"your_provider\",\n    \"model\": \"your_model\",\n    \"reasoning_effort\": \"default\",\n    \"version\": \"unspecified\",\n    \"enabled\": false,\n    \"availability\": \"unavailable\",\n    \"adapter\": {\n      \"kind\": \"command\",\n      \"command\": [\n        \"your-worker-adapter\"\n      ]\n    },\n    \"capabilities\": [\n      \"coding\",\n      \"documentation\",\n      \"tools\",\n      \"reasoning\"\n    ],\n    \"cost_profile\": {\n      \"currency\": null,\n      \"estimated_cost\": null\n    },\n    \"latency_profile\": {\n      \"estimated_seconds\": null\n    },\n    \"prior\": {\n      \"base\": 0.5,\n      \"domain_preferences\": {},\n      \"task_type_preferences\": {},\n      \"reasoning_intensity_preferences\": {}\n    },\n    \"manual_notes\": \"Configure an authenticated tool-capable adapter and enable explicitly; no provider or model preference.\"\n  }\n]"
+    },
+    {
+      "id": "C07",
+      "claim": "source_kind 不是 real 的经验会被排除。",
+      "evidence": "def _excluded(record, worker, signature, now, policy):\n    if not isinstance(record, dict):\n        return 'malformed'\n    if record.get('valid') is not True or record.get('source_kind') != 'real':\n        return 'unverified_or_nonreal'\n    if _contains_pollution(record):\n        return 'cancelled_or_polluted'\n    snapshot = record.get('worker')\n    if not isinstance(snapshot, dict) or any(snapshot.get(key) != worker[key] for key in ('worker_id', 'provider', 'model', 'reasoning_effort')):\n        return 'worker_snapshot_mismatch'\n    if not isinstance(snapshot.get('version'), str) or not snapshot['version']:\n        return 'worker_snapshot_mismatch'"
+    },
+    {
+      "id": "C08",
+      "claim": "codex_cli 构造的参数使用 --sandbox read-only。",
+      "evidence": "def build_command(worker, workspace):\n    adapter = worker['adapter']\n    command = list(adapter['command'])\n    model, effort = worker['model'], worker['reasoning_effort']\n    if adapter['kind'] == 'command':\n        values = {'workspace': workspace, 'model': model, 'reasoning_effort': effort}\n        # Single pass: replacement values cannot introduce additional placeholders.\n        import re\n        return [re.sub(r'\\{(workspace|model|reasoning_effort)\\}', lambda m: values[m[1]], part) for part in command]\n    if adapter['kind'] == 'codex_worker':\n        command.append(workspace)\n        if model != 'default': command += ['--model', model]\n        if effort != 'default': command += ['--reasoning-effort', effort]\n    elif adapter['kind'] == 'codex_cli':\n        command += ['exec', '--sandbox', 'workspace-write', '--json']\n        if model != 'default': command += ['--model', model]\n        if effort != 'default': command += ['--config', 'model_reasoning_effort=' + json.dumps(effort)]\n        command.append('-')\n    elif adapter['kind'] == 'claude_code':\n        command += ['--print', '--output-format', 'json']\n        if model != 'default': command += ['--model', model]\n        if effort != 'default': command += ['--effort', effort]\n    else:\n        raise ValueError('unsupported adapter kind')\n    return command"
+    },
+    {
+      "id": "C09",
+      "claim": "只要该检查通过，就已证明证据中所写的业务结论为真。",
+      "evidence": "def evidence_checked(refs, workspace):\n    if not isinstance(refs, list) or not refs:\n        raise ValueError('commander evidence references required')\n    root = Path(workspace).resolve()\n    for ref in refs:\n        if not isinstance(ref, dict):\n            raise ValueError('invalid evidence reference')\n        raw = require_text(ref.get('path'), 'evidence path')\n        path = (root / raw).resolve()\n        if Path(raw).is_absolute() or not path.is_relative_to(root) or not path.is_file():\n            raise ValueError('evidence must be an existing file inside workspace')\n        if digest_file(path) != ref.get('sha256'):\n            raise ValueError('evidence hash mismatch')\n    return deepcopy(refs)"
+    },
+    {
+      "id": "C10",
+      "claim": "公共默认 worker_template 的 enabled 为 false。",
+      "evidence": "[\n  {\n    \"worker_id\": \"worker_template\",\n    \"provider\": \"your_provider\",\n    \"model\": \"your_model\",\n    \"reasoning_effort\": \"default\",\n    \"version\": \"unspecified\",\n    \"enabled\": false,\n    \"availability\": \"unavailable\",\n    \"adapter\": {\n      \"kind\": \"command\",\n      \"command\": [\n        \"your-worker-adapter\"\n      ]\n    },\n    \"capabilities\": [\n      \"coding\",\n      \"documentation\",\n      \"tools\",\n      \"reasoning\"\n    ],\n    \"cost_profile\": {\n      \"currency\": null,\n      \"estimated_cost\": null\n    },\n    \"latency_profile\": {\n      \"estimated_seconds\": null\n    },\n    \"prior\": {\n      \"base\": 0.5,\n      \"domain_preferences\": {},\n      \"task_type_preferences\": {},\n      \"reasoning_intensity_preferences\": {}\n    },\n    \"manual_notes\": \"Configure an authenticated tool-capable adapter and enable explicitly; no provider or model preference.\"\n  }\n]"
+    },
+    {
+      "id": "C11",
+      "claim": "第二次交接包无需 commander 提供 files_modified 等字段。",
+      "evidence": "    def handoff(self, task):\n        previous = task['attempts'][-1]\n        review = previous['review']\n        supplied = review.get('handoff', {})\n        keys = ('files_inspected', 'files_modified', 'current_diff', 'tests_run', 'test_results',\n                'previous_approach', 'what_worked', 'what_failed', 'known_bad_approaches',\n                'remaining_work', 'constraints')\n        if any(key not in supplied for key in keys):\n            raise ValueError('attempt 2 requires full commander handoff package')\n        return {'logical_task_id': task['logical_task_id'], 'attempt_number': 2,\n                'max_attempts': MAX_WORKER_ATTEMPTS, 'objective': task['objective'],\n                'scope': task['scope'], 'acceptance_criteria': task['acceptance_criteria'],\n                'original_plan': task['original_plan'], 'repo_context': task['repo_context'],\n                'previous_worker': previous['worker'], 'failure_diagnosis': review['diagnosis'],\n                **{key: deepcopy(supplied[key]) for key in keys}, 'notice': 'THIS IS WORKER ATTEMPT 2 OF 2.'}"
+    },
+    {
+      "id": "C12",
+      "claim": "该项目在真实生产任务上已经实测节省了 40% 总成本。",
+      "evidence": "目标是提高单位成本下的已验收有用成果，不是保证省钱。主模型额度、实际费用、总 token、复核与返工成本须分开核算；没有自动节省率或跨供应商质量保证。"
+    },
+    {
+      "id": "C13",
+      "claim": "Claude Code 适配器以 --print 和 --output-format json 参数运行。",
+      "evidence": "def build_command(worker, workspace):\n    adapter = worker['adapter']\n    command = list(adapter['command'])\n    model, effort = worker['model'], worker['reasoning_effort']\n    if adapter['kind'] == 'command':\n        values = {'workspace': workspace, 'model': model, 'reasoning_effort': effort}\n        # Single pass: replacement values cannot introduce additional placeholders.\n        import re\n        return [re.sub(r'\\{(workspace|model|reasoning_effort)\\}', lambda m: values[m[1]], part) for part in command]\n    if adapter['kind'] == 'codex_worker':\n        command.append(workspace)\n        if model != 'default': command += ['--model', model]\n        if effort != 'default': command += ['--reasoning-effort', effort]\n    elif adapter['kind'] == 'codex_cli':\n        command += ['exec', '--sandbox', 'workspace-write', '--json']\n        if model != 'default': command += ['--model', model]\n        if effort != 'default': command += ['--config', 'model_reasoning_effort=' + json.dumps(effort)]\n        command.append('-')\n    elif adapter['kind'] == 'claude_code':\n        command += ['--print', '--output-format', 'json']\n        if model != 'default': command += ['--model', model]\n        if effort != 'default': command += ['--effort', effort]\n    else:\n        raise ValueError('unsupported adapter kind')\n    return command"
+    },
+    {
+      "id": "C14",
+      "claim": "_ready 允许状态 AWAITING_REVIEW 的任务立即再次运行。",
+      "evidence": "    def _ready(task):\n        if task['worker_attempt_count'] >= MAX_WORKER_ATTEMPTS:\n            raise ValueError('two worker attempts exhausted; strong commander takeover only')\n        if task['status'] not in ('READY', 'RETRY_READY'):\n            raise ValueError('task must be ready or reviewed and explicitly approved for retry')"
+    },
+    {
+      "id": "C15",
+      "claim": "这段代码证明已在 Windows 平台进行兼容性验证。",
+      "evidence": "    def _load(self):\n        if not self.path.exists():\n            return empty_state()\n        try:\n            state = json.loads(self.path.read_text(), parse_constant=lambda v: (_ for _ in ()).throw(ValueError(v)))\n            return check_state(state)\n        except (ValueError, TypeError, KeyError, AttributeError) as exc:\n            raise StateError(f'ledger invalid; manual investigation required: {exc}') from exc"
+    },
+    {
+      "id": "C16",
+      "claim": "生成的第二次交接包带有 attempt_number 2 和 max_attempts MAX_WORKER_ATTEMPTS。",
+      "evidence": "    def handoff(self, task):\n        previous = task['attempts'][-1]\n        review = previous['review']\n        supplied = review.get('handoff', {})\n        keys = ('files_inspected', 'files_modified', 'current_diff', 'tests_run', 'test_results',\n                'previous_approach', 'what_worked', 'what_failed', 'known_bad_approaches',\n                'remaining_work', 'constraints')\n        if any(key not in supplied for key in keys):\n            raise ValueError('attempt 2 requires full commander handoff package')\n        return {'logical_task_id': task['logical_task_id'], 'attempt_number': 2,\n                'max_attempts': MAX_WORKER_ATTEMPTS, 'objective': task['objective'],\n                'scope': task['scope'], 'acceptance_criteria': task['acceptance_criteria'],\n                'original_plan': task['original_plan'], 'repo_context': task['repo_context'],\n                'previous_worker': previous['worker'], 'failure_diagnosis': review['diagnosis'],\n                **{key: deepcopy(supplied[key]) for key in keys}, 'notice': 'THIS IS WORKER ATTEMPT 2 OF 2.'}"
+    },
+    {
+      "id": "C17",
+      "claim": "evidence_checked 接受 workspace 外部的绝对路径作为证据。",
+      "evidence": "def evidence_checked(refs, workspace):\n    if not isinstance(refs, list) or not refs:\n        raise ValueError('commander evidence references required')\n    root = Path(workspace).resolve()\n    for ref in refs:\n        if not isinstance(ref, dict):\n            raise ValueError('invalid evidence reference')\n        raw = require_text(ref.get('path'), 'evidence path')\n        path = (root / raw).resolve()\n        if Path(raw).is_absolute() or not path.is_relative_to(root) or not path.is_file():\n            raise ValueError('evidence must be an existing file inside workspace')\n        if digest_file(path) != ref.get('sha256'):\n            raise ValueError('evidence hash mismatch')\n    return deepcopy(refs)"
+    },
+    {
+      "id": "C18",
+      "claim": "环境变量角色检查证明调用者已通过强模型身份认证。",
+      "evidence": "def commander_only():\n    if os.environ.get(ROLE_ENV) == 'worker':\n        raise PermissionError('worker cannot create, route, dispatch, review or reset tasks')"
+    }
+  ]
+}

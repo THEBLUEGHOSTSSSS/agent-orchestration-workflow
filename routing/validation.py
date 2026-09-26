@@ -22,6 +22,8 @@ def validate_ledger(state):
         linked = set()
         for task in state['tasks'].values():
             validate_signature(task['task_signature'])
+            from routing.verification_service import validate_verification_state
+            validate_verification_state(state, task)
             for attempt in task['attempts']:
                 number = attempt['attempt_number']
                 decision = attempt['routing']

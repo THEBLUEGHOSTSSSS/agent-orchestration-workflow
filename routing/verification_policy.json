@@ -1,0 +1,78 @@
+{
+  "weights": {
+    "complexity": 1,
+    "uncertainty": 1,
+    "business_impact": 1,
+    "irreversibility": 1,
+    "security_risk": 1,
+    "external_side_effects": 1,
+    "worker_historical_failure_rate": 1,
+    "verification_difficulty": 1
+  },
+  "thresholds": {
+    "medium": 0.25,
+    "high": 0.5,
+    "critical": 0.75
+  },
+  "tiers": {
+    "LOW": {
+      "reviewers": 0,
+      "adversarial_review": false,
+      "human_approval": false
+    },
+    "MEDIUM": {
+      "reviewers": 1,
+      "adversarial_review": false,
+      "human_approval": false
+    },
+    "HIGH": {
+      "reviewers": 2,
+      "adversarial_review": false,
+      "human_approval": false
+    },
+    "CRITICAL": {
+      "reviewers": 2,
+      "adversarial_review": true,
+      "human_approval": true
+    }
+  },
+  "reviewers": [],
+  "risk_floors": {
+    "security_risk": {
+      "threshold": 0.75,
+      "tier": "HIGH"
+    },
+    "irreversibility": {
+      "threshold": 0.9,
+      "tier": "CRITICAL"
+    },
+    "external_side_effects": {
+      "threshold": 0.9,
+      "tier": "HIGH"
+    }
+  },
+  "max_revision_rounds": 1,
+  "budgets": {
+    "max_total_cost": 2,
+    "max_total_tokens": 40000,
+    "max_wall_time": 600,
+    "max_reviewer_calls": 6
+  },
+  "history": {
+    "min_samples": 4,
+    "half_life_days": 90
+  },
+  "selection_weights": {
+    "reliability": 0.45,
+    "independence": 0.25,
+    "diversity": 0.15,
+    "cost": 0.075,
+    "latency": 0.075
+  },
+  "judge": {
+    "min_confidence": 0.5,
+    "high_scrutiny_confidence": 0.7,
+    "worker_failure_scrutiny_threshold": 0.4,
+    "min_reliability": 0.4
+  }
+}

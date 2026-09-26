@@ -15,6 +15,9 @@ from routing.models import MAX_WORKER_ATTEMPTS, load_config, validate_signature,
 from routing.selection import route
 from routing.store import Store, StateError
 
+from routing.verification_service import (VerificationMixin, initialize_verification, worker_budget,
+    acceptance_gate, record_verification_experience)
+
 ROLE_ENV = 'ADAPTIVE_WORKER_ROLE'
 
 
@@ -29,7 +32,7 @@ def require_text(value, name):
 
 
 def commander_only():
-    if os.environ.get(ROLE_ENV) == 'worker':
+    if os.environ.get(ROLE_ENV, '').lower() in ('worker', 'reviewer'):
         raise PermissionError('worker cannot create, route, dispatch, review or reset tasks')
 
 
@@ -66,7 +69,7 @@ def resolve(state, task_id):
     return state['tasks'][canonical]
 
 
-class Workflow:
+class Workflow(VerificationMixin):
     def __init__(self, state_path, config_path=None):
         self.store = Store(state_path)
         self.config = load_config(config_path)
@@ -119,6 +122,8 @@ class Workflow:
                 state['work_keys'][fingerprint] = existing
                 event(state, 'ALIAS_BOUND', state['tasks'][existing], alias=task_id)
                 return state['tasks'][existing]
+            if self.config.get('require_verification_for_new_tasks') and 'verification' not in spec:
+                raise ValueError('new delegated tasks require an explicit verification specification')
             task = {'logical_task_id': task_id, 'task_id': task_id, 'work_key': key,
                     'workspace': workspace, 'baseline': baseline, 'objective': objective,
                     'scope': scope, 'acceptance_criteria': criteria, 'task_signature': signature,
@@ -127,6 +132,8 @@ class Workflow:
                     'new_scope_rationale': spec.get('new_scope_rationale'),
                     'source_kind': source, 'created_at': stamp(), 'status': 'READY',
                     'worker_attempt_count': 0, 'attempts': [], 'final_status': 'pending'}
+            if 'verification' in spec:
+                task['verification_layer'] = initialize_verification(spec['verification'], self.config.get('verification'))
             state['tasks'][task_id] = task
             state['aliases'][task_id] = task_id
             state['work_keys'][fingerprint] = task_id
@@ -136,10 +143,21 @@ class Workflow:
 
     def _decision(self, state, task, manual_worker=None):
         previous = task['attempts'][-1] if task['attempts'] else None
-        return route(task['task_signature'], state['experiences'], self.config,
+        constrained_retry = False
+        if previous and not manual_worker and task.get('verification_layer'):
+            sessions = [s for s in task['verification_layer']['sessions'] if s['attempt_number'] == previous['attempt_number'] and s['kind'] == 'worker']
+            action = sessions[-1].get('judge', {}).get('recommended_action') if sessions else None
+            if action in ('minor_fix', 'strategy_failure'):
+                manual_worker = previous['worker']['worker_id']
+                constrained_retry = True
+        decision = route(task['task_signature'], state['experiences'], self.config,
                      previous_worker=previous['worker']['worker_id'] if previous else None,
                      diagnosis=previous.get('review', {}).get('diagnosis') if previous else None,
                      manual_worker=manual_worker)
+        if constrained_retry:
+            decision['selection_mode'] = 'VERIFICATION_RETRY_SAME'
+            decision['routing_reason'] = 'Commander-approved revision retains the worker for ' + action + '; ' + str(decision['routing_reason'])
+        return decision
 
     def preview(self, task_id, manual_worker=None):
         commander_only()
@@ -169,6 +187,7 @@ class Workflow:
                 'scope': task['scope'], 'acceptance_criteria': task['acceptance_criteria'],
                 'original_plan': task['original_plan'], 'repo_context': task['repo_context'],
                 'previous_worker': previous['worker'], 'failure_diagnosis': review['diagnosis'],
+                'task_clarification': review.get('task_clarification'),
                 **{key: deepcopy(supplied[key]) for key in keys}, 'notice': 'THIS IS WORKER ATTEMPT 2 OF 2.'}
 
     def reserve(self, task_id, manual_worker=None):
@@ -178,7 +197,10 @@ class Workflow:
             self._ready(task)
             decision = self._decision(state, task, manual_worker)
             worker = next(w for w in self.config['workers'] if w['worker_id'] == decision['selected_worker'])
+            if task.get('verification_layer') and 'gemini' in (worker['model'] + worker['provider']).lower():
+                raise ValueError('Gemini is excluded from this verification workflow')
             handoff = self.handoff(task) if task['attempts'] else None
+            worker_budget(task, worker)
             number = task['worker_attempt_count'] + 1
             attempt = {'logical_task_id': task['logical_task_id'], 'attempt_number': number,
                        'worker': deepcopy(worker), 'routing': decision, 'started_at': stamp(),
@@ -204,6 +226,15 @@ class Workflow:
                 raise ValueError('attempt is not running; cannot rewrite execution')
             attempt.update(status='REPORTED', execution=deepcopy(execution), finished_at=stamp())
             task['status'] = 'AWAITING_REVIEW'
+            if task.get('verification_layer'):
+                reservation = next(r for r in task['verification_layer']['reservations'] if r['id'] == f'worker:{number}')
+                cost = execution.get('estimated_cost')
+                if type(cost) in (int, float) and math.isfinite(cost) and cost >= 0:
+                    if execution.get('currency') == 'USD': reservation['actual_cost'] = cost
+                    else: reservation['unconverted_cost'] = cost
+                usage = execution.get('token_usage')
+                tokens = usage.get('total_tokens') if isinstance(usage, dict) else usage
+                if type(tokens) is int and tokens >= 0: reservation['actual_tokens'] = tokens
             experience_id = f"{task['logical_task_id']}:{number}"
             attempt['experience_id'] = experience_id
             experience = {'experience_id': experience_id, 'timestamp': stamp(),
@@ -227,6 +258,12 @@ class Workflow:
         timeout = timeout if timeout is not None else self.config.get('execution_timeout_seconds', 300)
         if type(timeout) not in (int, float) or not math.isfinite(timeout) or timeout <= 0:
             raise ValueError('positive bounded execution timeout required')
+        current = self.inspect(task_id)
+        if current.get('verification_layer'):
+            layer = current['verification_layer']
+            elapsed = (datetime.now(timezone.utc) - datetime.fromisoformat(layer['created_at'])).total_seconds()
+            timeout = min(timeout, layer['policy']['budgets']['max_wall_time'] - elapsed)
+            if timeout <= 0: raise ValueError('task wall-time budget exhausted')
         reservation = self.reserve(task_id, manual_worker)
         task, attempt = reservation['task'], reservation['attempt']
         if executor is not None and task['source_kind'] == 'real':
@@ -294,6 +331,31 @@ class Workflow:
                 'log_path': str(directory / 'output.log'), 'log_sha256': digest_file(directory / 'output.log'),
                 'selected_model': worker['model'], 'reasoning_effort': worker['reasoning_effort']}
 
+    def screen(self, task_id, packet, mode='OFF'):
+        """Explicit advisory stage; never transitions review or execution state."""
+        commander_only()
+        from routing.jev import screen_evidence, validate_packet
+        packet = validate_packet(packet)
+        state = self.store.read()
+        task = resolve(state, task_id)
+        if task['status'] != 'AWAITING_REVIEW':
+            raise ValueError('screening requires a reported attempt awaiting commander review')
+        if packet['logical_task_id'] != task['logical_task_id']:
+            raise ValueError('screening logical identity mismatch')
+        number = task['worker_attempt_count']
+        result = screen_evidence(packet, mode)
+        # No lock is held during HTTP; refuse attachment if another session reviewed.
+        def attach(current):
+            latest = resolve(current, task_id)
+            if latest['status'] != 'AWAITING_REVIEW' or latest['worker_attempt_count'] != number:
+                raise ValueError('task changed during screening; result cannot be attached')
+            latest['attempts'][-1].setdefault('advisory_screens', []).append(result)
+            event(current, 'ADVISORY_SCREEN_RECORDED', latest,
+                  screen_status=result['status'], input_sha256=result['input_sha256'],
+                  commander_review_required=True)
+            return result
+        return self.store.transaction(attach)
+
     def review(self, task_id, review):
         commander_only()
         reviewer = require_text(review.get('reviewer'), 'strong commander reviewer')
@@ -316,6 +378,23 @@ class Workflow:
             task = resolve(state, task_id)
             if task['status'] != 'AWAITING_REVIEW':
                 raise ValueError('review requires reported execution; cannot overwrite review')
+            layer = task.get('verification_layer')
+            if layer and any(s['status'] == 'RUNNING' for s in layer['sessions']):
+                raise ValueError('verification running; cannot finalize concurrently')
+            if accepted:
+                acceptance_gate(task, 'worker')
+            if layer and action == 'retry':
+                sessions = [s for s in layer['sessions'] if s['attempt_number'] == task['worker_attempt_count'] and s['kind'] == 'worker']
+                if not sessions or sessions[-1]['status'] != 'COMPLETE' or sessions[-1]['judge']['status'] != 'REVISE':
+                    raise ValueError('Judge must recommend revision before Worker retry')
+                if sessions[-1]['judge']['recommended_action'] == 'worker_mismatch':
+                    from routing.selection import SERIOUS_FAILURES
+                    if diagnosis['attribution'] != 'MODEL_RELATED' or diagnosis['failure_type'] not in SERIOUS_FAILURES:
+                        raise ValueError('worker mismatch must be confirmed by Commander model-related diagnosis')
+                if sessions[-1]['judge']['recommended_action'] == 'ambiguous_task':
+                    require_text(review.get('task_clarification'), 'Commander task clarification before retry')
+                if task['worker_attempt_count'] > layer['policy']['max_revision_rounds']:
+                    raise ValueError('revision rounds exhausted; Commander takeover')
             evidence = evidence_checked(review.get('evidence'), task['workspace'])
             checks = review.get('criteria', [])
             expected = {c['id'] for c in task['acceptance_criteria']}
@@ -371,6 +450,18 @@ class Workflow:
                     if field in metrics:
                         exp['execution'][field] = deepcopy(metrics[field])
                         attempt['execution'][field] = deepcopy(metrics[field])
+            if task.get('verification_layer') and metrics:
+                reservation = next(r for r in task['verification_layer']['reservations'] if r['id'] == f"worker:{attempt['attempt_number']}")
+                if metrics.get('estimated_cost') is not None:
+                    if metrics.get('currency') != 'USD':
+                        raise ValueError('verification budget requires costs converted to USD with evidence')
+                    reservation['actual_cost'] = metrics['estimated_cost']
+                    reservation.pop('unconverted_cost', None)
+                usage = metrics.get('token_usage')
+                tokens = usage.get('total_tokens') if isinstance(usage, dict) else usage
+                if type(tokens) is int and tokens >= 0: reservation['actual_tokens'] = tokens
+            if accepted and layer:
+                acceptance_gate(task, 'worker')
             exp.update(verification={'tests_run': checks, 'tests_passed': [c['id'] for c in checks if c['status'] == 'passed'],
                                      'static_checker_result': review.get('static_checker_result', 'not_run'),
                                      'reviewer_result': 'accepted' if accepted else 'rejected', 'reviewer': reviewer, 'evidence': evidence},
@@ -378,6 +469,7 @@ class Workflow:
                        diagnosis=diagnosis, repair=repair,
                        valid=not review.get('invalid_task', False), invalid_reason=review.get('invalid_reason'))
             exp['retry'].update(required=action == 'retry', action=action.upper(), next_worker=None)
+            record_verification_experience(state, task)
             event(state, 'COMMANDER_REVIEW', task, attempt_number=attempt['attempt_number'],
                   reviewer=reviewer, outcome=status, attribution=diagnosis['attribution'], action=action)
             return task
@@ -391,6 +483,7 @@ class Workflow:
             task = resolve(state, task_id)
             if task['status'] not in ('TAKEOVER_REQUIRED', 'BLOCKED', 'RETRY_READY'):
                 raise ValueError('task not available for commander takeover')
+            acceptance_gate(task, 'takeover')
             evidence_checked(record.get('evidence'), task['workspace'])
             checks = record.get('criteria', [])
             expected = {c['id'] for c in task['acceptance_criteria']}
@@ -412,6 +505,7 @@ class Workflow:
             exp['repair'].update(required=True, takeover=True, burden=burden, scope=record['summary'])
             exp['outcome']['worker_result_status'] = 'STRONG_MODEL_TAKEOVER_REQUIRED'
             # Worker acceptance stays false: commander success must never become worker credit.
+            record_verification_experience(state, task)
             event(state, 'COMMANDER_TAKEOVER_VALIDATED', task, reviewer=record['reviewer'], repair_burden=burden)
             return task
         return self.store.transaction(complete)

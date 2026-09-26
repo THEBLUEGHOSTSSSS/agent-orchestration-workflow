@@ -1,0 +1,83 @@
+{
+  "source_kind": "probe",
+  "paired_llm_comparison_completed": true,
+  "pairs": 1,
+  "packet_sha256": "42350cdd21f813b1fd76c329223b02046c28f4f8bafd1b7dbe00638389e3c987",
+  "baseline": {
+    "correct": 18,
+    "total": 18,
+    "unsupported_false_support": 0,
+    "api_cost_usd": 0.058605,
+    "duration_seconds": 4.582601792004425,
+    "usage": {
+      "prompt_tokens": 4081,
+      "completion_tokens": 152,
+      "total_tokens": 4233,
+      "cost": 0.058605,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 4078,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.058605,
+        "upstream_inference_prompt_cost": 0.051005,
+        "upstream_inference_completions_cost": 0.0076
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 32,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "assisted": {
+    "correct": 18,
+    "total": 18,
+    "unsupported_false_support": 0,
+    "api_cost_usd": 0.071278074,
+    "summed_stage_duration_seconds": 5.950607000004094,
+    "astra_usage": {
+      "prompt_tokens": 5059,
+      "completion_tokens": 155,
+      "total_tokens": 5214,
+      "cost": 0.07098,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 5056,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.07098,
+        "upstream_inference_prompt_cost": 0.06323,
+        "upstream_inference_completions_cost": 0.00775
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 35,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "jev_usage": {
+      "input_tokens": 7097,
+      "output_tokens": 813,
+      "cost": 0.000298074
+    }
+  },
+  "jev_only": {
+    "correct": 16,
+    "total": 18,
+    "unsupported_false_support": 0
+  },
+  "cost_change_percent": 21.6245610442795,
+  "summed_stage_latency_change_percent": 29.85215102884393,
+  "astra_prompt_token_change": 978,
+  "resumed_calls_cost_usd": 0.129585,
+  "all_successful_probe_calls_including_previous_jev_cost_usd": 0.129883074,
+  "latency_caveat": "One call per arm. Assisted latency is sum of prior Jev stage and current Astra stage, not one uninterrupted observed end-to-end run.",
+  "scope_caveat": "Reviewer label task only, not code implementation productivity; 12 seeded counterclaims; no independent human labeler; excludes development/preparation/commander costs."
+}

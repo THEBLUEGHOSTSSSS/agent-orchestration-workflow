@@ -43,6 +43,15 @@ def check_state(state):
     for target in list(state['aliases'].values()) + list(state['work_keys'].values()):
         if target not in state['tasks']:
             raise StateError('dangling task identity')
+    if 'reviewer_experiences' in state:
+        records = state['reviewer_experiences']
+        if not isinstance(records, list) or any(not isinstance(r, dict) for r in records):
+            raise StateError('invalid reviewer experience collection')
+        reviewer_ids = [r.get('experience_id') for r in records]
+        if any(not isinstance(i, str) or not i for i in reviewer_ids) or len(set(reviewer_ids)) != len(reviewer_ids):
+            raise StateError('invalid reviewer experience identities')
+        if any(r.get('logical_task_id') not in state['tasks'] for r in records):
+            raise StateError('orphan reviewer experience')
     ids = [e.get('experience_id') for e in state['experiences']]
     if any(not isinstance(i, str) or not i for i in ids) or len(ids) != len(set(ids)):
         raise StateError('invalid or duplicate experience id')

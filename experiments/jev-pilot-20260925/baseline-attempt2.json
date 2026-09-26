@@ -1,0 +1,7 @@
+{
+  "status": "UNKNOWN",
+  "arm": "baseline",
+  "http_status": 402,
+  "error": "Insufficient OpenRouter credits: max_tokens=1800; provider reported affordable completion allowance=799. Account-specific identifiers omitted.",
+  "duration_seconds": 0.629386999993585
+}

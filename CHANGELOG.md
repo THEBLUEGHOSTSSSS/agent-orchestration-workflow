@@ -1,5 +1,14 @@
 # 变更记录 / Changelog
 
+## 2026-09-26 — Verification and provider-compatible review
+
+- Add risk-tiered deterministic checks, independent blind reviewers, evidence-based Judge, critical human approval state and separate adjudicated reviewer experience.
+- Preserve the existing Worker Router and two-execution limit; optionally require verification for new tasks.
+- Add OpenRouter, Anthropic Messages-compatible and actual Claude Code client reviewers; explicit model identity, isolated CLI context and bounded subprocess execution.
+- Include 130 offline/regression tests and a separately labeled GPT/Claude live probe; no claim of general accuracy or cost savings.
+- Publish optional Jev screening and its matched pilot evidence; default remains OFF.
+- Public registries remain disabled, credential-free templates. Local deployment and live provider availability are separate checks.
+
 ## 2026-09-24 — Portable hosts and models
 
 - Neutral disabled-by-default registry; original GPT pool moved to an optional example.

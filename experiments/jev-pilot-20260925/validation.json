@@ -1,0 +1,22 @@
+{
+  "test_command": "python3 -m unittest discover -s tests -v",
+  "tests_passed": 72,
+  "network_calls_in_tests": 0,
+  "credential_pattern_scan": "passed scoped changed/new files",
+  "file_sha256": {
+    "routing/jev.py": "10d54667841e2c8b3804fb969e8d777f75956d01b86c1c028b9ed1fb59741693",
+    "scripts/screen_evidence.py": "16d4faae09fc37dd4762f92fd028ba975b90d9cc6ff45ba5d0195fe4690418f8",
+    "tests/test_jev.py": "fea0fb5c3d611842e2fc86a59a9e3f8618aae08702f3cb0d3b5b1e962bb38b08",
+    "tests/test_jev_workflow.py": "efda7172cce03ed6924e651953426c113df9ced9c04dd3625bfdba362b83081c",
+    "docs/jev-screening.md": "4587b2356345a9ef8a62fab19095e466b983191353390d422a0db229e741e4cb",
+    "experiments/jev-pilot-20260925/summary.json": "48d7d2b3fa5e3ab60f9ce783acc188142b758059b3f8181214bf72d519217a13",
+    "experiments/jev-pilot-20260925/gold.json": "7c684793a3c4069db279bb540ec7f23e2f471804ce22638b1e435ff85c046510",
+    "experiments/jev-pilot-20260925/baseline-attempt2.json": "78e9deaabd19a276bb1c238fd5bde61ffba4a99d162b2a52e6978e66c0e7092d",
+    "experiments/jev-pilot-20260925/jev.json": "7fdd2bc625fdbdc08c4eedbec2810bf2212f6cb99da60bd71cbea312b84ebaf7",
+    "experiments/jev-pilot-20260925/REPORT.md": "8e5db5a0d051e913b8095a93b6ac94604e838c44e53bd07817d25f1d05231a68",
+    "experiments/jev-pilot-20260925/packet.json": "42350cdd21f813b1fd76c329223b02046c28f4f8bafd1b7dbe00638389e3c987",
+    "experiments/jev-pilot-20260925/baseline.json": "c97099e2eebb51900fad180be791ca59925db72656bae82e2d992544af12c99d",
+    "experiments/jev-pilot-20260925/run_comparison.py": "00a583a54e932fc433b4d26eb45f88c5655422d9cbb7ac7965adba62f98102c9"
+  },
+  "note": "Implementation tests remain the previous 72-test run; subsequent changes affect probe scripts and documentation only, verified by py_compile and offline paired analysis."
+}

@@ -39,3 +39,13 @@ python3 scripts/route_worker.py --config ./my-routing.json --state .work/worker-
 ## 安全与审核边界
 
 任务提示、日志与账本可能包含敏感项目资料；仅向已授权的后端发送必要内容。Worker 不得改动认证、凭据、私有配置或递归委派；角色标记、任务范围和静态检查不构成操作系统隔离。高级架构、安全和数据策略决策由 Commander 在人的授权内承担。参考[审核与学习规则](docs/review-and-learning.md)、[Worker 契约](docs/worker-contract.md)与[安全指南](docs/security.md)。
+
+## 可选 Jev 语义筛查
+
+已提供默认关闭的 Jev 辅助阶段：Worker 返回后，可以显式运行 `screen`，再由 Commander 按原流程审核。它只提供证据支持性判断，不自动验收、不影响两轮执行额度，也不写入 Worker 适配经验。[接入与边界](docs/jev-screening.md) · [本项目对照试验及限制](experiments/jev-pilot-20260925/REPORT.md)。
+
+## 风险分层与独立审核
+
+新增可选 Verification & Deliberation Layer：LOW 先跑确定性检查；MEDIUM/HIGH 配置 1/2 个盲审 Reviewer；CRITICAL 增加对抗审核和人工批准状态。支持 GPT/Claude，保留原 Worker Router 和两轮上限。Reviewer 经验与 Worker 经验分开，Judge 按证据仲裁，不做多数投票。
+
+[Guide](docs/verification/README.md) · [Implementation and test report](docs/verification/IMPLEMENTATION_REPORT.md) · [Disabled registry example](examples/registry.verification.json)

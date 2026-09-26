@@ -1,0 +1,54 @@
+{
+  "status": "OK",
+  "source_kind": "probe",
+  "arm": "assisted",
+  "requested_model": "openai/gpt-6-astra",
+  "resolved_model": "openai/gpt-6-astra",
+  "request_id": "gen-1790313072-TznJMWgO47VsNBWs8Rwy",
+  "duration_seconds": 5.072721000004094,
+  "usage": {
+    "prompt_tokens": 5059,
+    "completion_tokens": 155,
+    "total_tokens": 5214,
+    "cost": 0.07098,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 5056,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.07098,
+      "upstream_inference_prompt_cost": 0.06323,
+      "upstream_inference_completions_cost": 0.00775
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 35,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "answers": {
+    "C01": "supported",
+    "C02": "contradicted",
+    "C03": "insufficient",
+    "C04": "supported",
+    "C05": "contradicted",
+    "C06": "insufficient",
+    "C07": "supported",
+    "C08": "contradicted",
+    "C09": "insufficient",
+    "C10": "supported",
+    "C11": "contradicted",
+    "C12": "insufficient",
+    "C13": "supported",
+    "C14": "contradicted",
+    "C15": "insufficient",
+    "C16": "supported",
+    "C17": "contradicted",
+    "C18": "insufficient"
+  },
+  "request_sha256": "2f35fc027a1b569e4039be1f8848b13a83cea932eb217ef21780b253a8936e4d",
+  "packet_sha256": "42350cdd21f813b1fd76c329223b02046c28f4f8bafd1b7dbe00638389e3c987"
+}

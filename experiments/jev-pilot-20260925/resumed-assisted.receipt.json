@@ -1,0 +1,59 @@
+{
+  "source_kind": "probe",
+  "arm": "assisted",
+  "model": "openai/gpt-6-astra",
+  "request_id": "gen-1790313072-TznJMWgO47VsNBWs8Rwy",
+  "usage": {
+    "prompt_tokens": 5059,
+    "completion_tokens": 155,
+    "total_tokens": 5214,
+    "cost": 0.07098,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 5056,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.07098,
+      "upstream_inference_prompt_cost": 0.06323,
+      "upstream_inference_completions_cost": 0.00775
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 35,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "duration_seconds": 5.072721000004094,
+  "choices": [
+    {
+      "index": 0,
+      "logprobs": null,
+      "finish_reason": "stop",
+      "native_finish_reason": "completed",
+      "message": {
+        "role": "assistant",
+        "content": "{\"answers\":{\"C01\":\"supported\",\"C02\":\"contradicted\",\"C03\":\"insufficient\",\"C04\":\"supported\",\"C05\":\"contradicted\",\"C06\":\"insufficient\",\"C07\":\"supported\",\"C08\":\"contradicted\",\"C09\":\"insufficient\",\"C10\":\"supported\",\"C11\":\"contradicted\",\"C12\":\"insufficient\",\"C13\":\"supported\",\"C14\":\"contradicted\",\"C15\":\"insufficient\",\"C16\":\"supported\",\"C17\":\"contradicted\",\"C18\":\"insufficient\"}}",
+        "refusal": null,
+        "reasoning": "**Identifying label needs**\n\nI need to clarify some labels. The C02 ROLE_ENV is unknown, but its expected use seems contradicted. For C06, there are insufficient metrics, while for C12, it appears there's no guarantee that not negating something is measured properly. Overall, it looks like there's some information missing or unclear in these areas, but I see that for the rest, everything looks okay. I should probably break this down further to get better clarity!",
+        "reasoning_details": [
+          {
+            "type": "reasoning.summary",
+            "summary": "**Identifying label needs**\n\nI need to clarify some labels. The C02 ROLE_ENV is unknown, but its expected use seems contradicted. For C06, there are insufficient metrics, while for C12, it appears there's no guarantee that not negating something is measured properly. Overall, it looks like there's some information missing or unclear in these areas, but I see that for the rest, everything looks okay. I should probably break this down further to get better clarity!",
+            "format": "openai-responses-v1",
+            "index": 0
+          },
+          {
+            "type": "reasoning.encrypted",
+            "data": "gAAAAABqtgJ0ggmsUVLpY9Uf9AStjFSYKszq6B98vRw7A2pUHmBpVl7Gz5TLXpFYgIc2X9Iozoz_9qeLgUZOysxeBXLpWk6-41JE1touh2WWFd-AtTnWcW_wNlOstX9zJY3R9DOaX6nTPIyBToqfejGoNRmT2isJ33lhpv90LfDf9pamueG8QxF-6i0V7enkma4DxHzNqYCfLPoNIW95Qt6jDYUwYIkV1Z1tPUr7r9-OI5uHJHubG7jP8tYAw7I3eG6jPbsj_7xBqzX6fml9K7wCTdm_QeZmVf6WtUQNVRiVz2o5nupik63NIXehYMTGPaE3h2Xx9YtWfKYROZEC3aCCuL1Vp1pTmMDXjrKrT6yikJFH72B4wcNar9IxFOrC2Gl5qs9qOYZWK-l0eCeYAeQvkhHbk_iZaU3QWhQboXFq81fFdXgxwn-zfOK0fv-Ds_YLZoEmOuJg5kCeB6Qa_-RuXJvV3PxnT1BgDsl5ikn23QZF_GMFKttdTgnO07wmso1Rr7idnRBOKbd-zGA5tzdJ48V6F38ZItKQDIxaJgqOeEB_Kc4RM89FN_8WZC5Jl956CgDlD3AbDuj0Le4s2fpfPJsH48wBzKYxUQ414Qx5mHXepSSvRa1CAZcAI8WJVuNMQR-q3ZwydpY7j-btiKhegvm0YOpthq0femQ9DAWF2zW9vMl1NQxEuiiub99vkWw5fI45DLRO0fEO_250_0w8lE3XldymbK55l-ng7Vw247fACRo6u8rmC8Y1nqAtCJSfh7VeKHTwtWVr8XQw7-g5vdPyrWzhskLUPam3vassR2GDyMI05DO8CB05IBH-VBNBuo2USa0jN0TkrxuqApzro14hKUItDicUE0jMyUKNCYKBStWWM0Jao8eisZ7JcrnLEnN2_JlRS9hBp8vcTACh2Y4-KDCnhcAUvLs4CoTzTMfSz_ZxhCEJsdKvVNJdkJ6LChsUDJxG5GHs8AIowLqZCJGmiUrMwj7EbSjxXHla0dJmqaSpl_ZygYk3Chjgv8oCj4NkpBlH_SMFE7SgUhBU9iCb74WzirksHECzLL0bXpij1C-CYwG9HV8Q4D0wCXMhXrm790rphw93IzkRuEBSsYLsEkabQxNCCT1R490qKdm7a4XCvwzsU2I1XiHn6z5T1B0nIT_UWVr-dL4M--hDCVmok9d_1kTOiNjoZHsHq596YQAaQ86foyWmyNqw5eww-fBceRHT3Pl9f9gFS3M67oe07FS2gDsNlmAApFGfLu3nFwQZqmP57TS8zj-xh66s51AO7xZQKj03u5nm_1umUDuqeCmrvczsZgH6nw04MgUUsPkLcjk8_L_VAcXIqy0NEyIyHUOJ-NrzDqp9n6AVQzzlRMWEsmjjE0apAX6hSkcPURolGGPsX2DLpC3Is2W6a8iYoL9J7s189pN6JsV9786_iwMZKomsN3PERq7Wu1nJpeyeEJjlDgpJLoNKSFqRTBbD0U03OTHqY69hdSoZzkwwefRRolPFJtuWZEHQ36fHqXmElbDxVk_InBXxBJMUEDRQzfVLALpIu6h6Drzt_zY6bdub-Q==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC02LWFzdHJhLTIwMjYwOTAzfG9wZW5haSJ9",
+            "format": "openai-responses-v1",
+            "id": "rs_0ca3b00a2f1b7925016ab6027231a487d1a7ffcd545e9e8be8",
+            "index": 1
+          }
+        ]
+      }
+    }
+  ]
+}

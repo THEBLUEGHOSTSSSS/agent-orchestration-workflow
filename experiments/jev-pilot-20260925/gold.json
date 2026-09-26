@@ -1,0 +1,114 @@
+{
+  "source_kind": "probe",
+  "baseline": "0c249b2475fd72c3f50c98e3653309027b1a5271",
+  "labels": {
+    "C01": {
+      "expected": "supported",
+      "source": "routing/service.py",
+      "evidence_sha256": "dce844c91189062b34ba5b06ca8762fa4fc160d075d5dddb3cacfdb3f296c4fe",
+      "kind": "code_grounded_statement"
+    },
+    "C02": {
+      "expected": "contradicted",
+      "source": "routing/service.py",
+      "evidence_sha256": "aeaf915c5aa1dced2aecdb606bd0ba5860284307396b48da408f66c911b09911",
+      "kind": "seeded_counterclaim"
+    },
+    "C03": {
+      "expected": "insufficient",
+      "source": "routing/adapters.py",
+      "evidence_sha256": "2a44cb69bf1ce1d7820d559a069beb44f80254b00dd7fa5c9be0cddbb56a5d41",
+      "kind": "seeded_counterclaim"
+    },
+    "C04": {
+      "expected": "supported",
+      "source": "routing/service.py",
+      "evidence_sha256": "d7dc5680a15f1d92a05cdfa25a5b39d87d33e22f70b2dbf862390c6e1e4e0c5c",
+      "kind": "code_grounded_statement"
+    },
+    "C05": {
+      "expected": "contradicted",
+      "source": "routing/store.py",
+      "evidence_sha256": "6295c910588ed9152f9a25618e732a43bee27b7cd0557ef427887350e77c4a24",
+      "kind": "seeded_counterclaim"
+    },
+    "C06": {
+      "expected": "insufficient",
+      "source": "routing/defaults.json",
+      "evidence_sha256": "1108b88e42c11bd31f496a663f702d16d7e6254035132cd251c15beac05d3c92",
+      "kind": "seeded_counterclaim"
+    },
+    "C07": {
+      "expected": "supported",
+      "source": "routing/selection.py",
+      "evidence_sha256": "242ac7170d07c9b92873a755ef7461a15f45d932795c31b34de3ae8f329119ef",
+      "kind": "code_grounded_statement"
+    },
+    "C08": {
+      "expected": "contradicted",
+      "source": "routing/adapters.py",
+      "evidence_sha256": "2a44cb69bf1ce1d7820d559a069beb44f80254b00dd7fa5c9be0cddbb56a5d41",
+      "kind": "seeded_counterclaim"
+    },
+    "C09": {
+      "expected": "insufficient",
+      "source": "routing/service.py",
+      "evidence_sha256": "d7dc5680a15f1d92a05cdfa25a5b39d87d33e22f70b2dbf862390c6e1e4e0c5c",
+      "kind": "seeded_counterclaim"
+    },
+    "C10": {
+      "expected": "supported",
+      "source": "routing/defaults.json",
+      "evidence_sha256": "1108b88e42c11bd31f496a663f702d16d7e6254035132cd251c15beac05d3c92",
+      "kind": "code_grounded_statement"
+    },
+    "C11": {
+      "expected": "contradicted",
+      "source": "routing/service.py",
+      "evidence_sha256": "f2667dfa8fb377df97b0a6076d3aa159454ba26e8c3f4ef4ab9bd6772cc827d0",
+      "kind": "seeded_counterclaim"
+    },
+    "C12": {
+      "expected": "insufficient",
+      "source": "README.md",
+      "evidence_sha256": "7a78a4ba56f96b985aa863b48689c98855d3f53f39ac7fc8ed73a5123da80582",
+      "kind": "seeded_counterclaim"
+    },
+    "C13": {
+      "expected": "supported",
+      "source": "routing/adapters.py",
+      "evidence_sha256": "2a44cb69bf1ce1d7820d559a069beb44f80254b00dd7fa5c9be0cddbb56a5d41",
+      "kind": "code_grounded_statement"
+    },
+    "C14": {
+      "expected": "contradicted",
+      "source": "routing/service.py",
+      "evidence_sha256": "dce844c91189062b34ba5b06ca8762fa4fc160d075d5dddb3cacfdb3f296c4fe",
+      "kind": "seeded_counterclaim"
+    },
+    "C15": {
+      "expected": "insufficient",
+      "source": "routing/store.py",
+      "evidence_sha256": "6295c910588ed9152f9a25618e732a43bee27b7cd0557ef427887350e77c4a24",
+      "kind": "seeded_counterclaim"
+    },
+    "C16": {
+      "expected": "supported",
+      "source": "routing/service.py",
+      "evidence_sha256": "f2667dfa8fb377df97b0a6076d3aa159454ba26e8c3f4ef4ab9bd6772cc827d0",
+      "kind": "code_grounded_statement"
+    },
+    "C17": {
+      "expected": "contradicted",
+      "source": "routing/service.py",
+      "evidence_sha256": "d7dc5680a15f1d92a05cdfa25a5b39d87d33e22f70b2dbf862390c6e1e4e0c5c",
+      "kind": "seeded_counterclaim"
+    },
+    "C18": {
+      "expected": "insufficient",
+      "source": "routing/service.py",
+      "evidence_sha256": "aeaf915c5aa1dced2aecdb606bd0ba5860284307396b48da408f66c911b09911",
+      "kind": "seeded_counterclaim"
+    }
+  }
+}

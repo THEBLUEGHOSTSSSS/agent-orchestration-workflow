@@ -768,3 +768,31 @@ implement a scheduler, or prove runtime isolation or cost savings.
 
 Review and learning details: docs/review-and-learning.md
 Optional static ledger checker: scripts/validate_review.py
+
+## Optional advisory semantic screening
+
+Use `route_worker.py screen TASK_ID packet.json --mode SHADOW` only when the Commander judges batch semantic screening useful and the backend/data transfer is authorized. Default OFF. See docs/jev-screening.md. Jev predictions are untrusted advisory evidence, never acceptance or failure attribution. Inspect actual artifacts and preserve all original criteria. UNKNOWN means continue normal Commander review. Never use a screening label to automatically spend a retry, lower Worker suitability, or bypass two attempts. No background polling or implicit repeated calls.
+
+
+## Verification & Deliberation Layer
+
+For tasks using structured risk-based independent review, create the task with
+`verification` from `templates/verification-task.example.json` and a configured
+registry. See `docs/verification/README.md`. Preserve the existing Worker Router
+and ledger; Reviewer routing and experiences are separate. Run `verify` after
+execution, deterministic checks first. Send blind artifact/evidence packets,
+never Worker reasoning or other reviewers' opinions. Current Reviewer families
+are GPT and Claude; Gemini is excluded. HIGH/CRITICAL review uses distinct roles;
+CRITICAL also requires adversarial review and a recorded actual human decision.
+
+Judge recommendations never replace Commander artifact review, attribution,
+acceptance or the two-Worker-execution cap. No majority voting over unresolved
+counterexamples. Do not bypass a failed gate by omitting verification on an alias,
+resetting the ledger, or taking over without fresh verification. Budget failures,
+missing reviewers, stale artifacts and uncertain results require investigation
+or truthful blocked status. Keep probes out of real suitability learning.
+Reviewer feedback needs independently grounded evidence, not model agreement.
+Human approval records are operator-attested, not authenticated identities;
+never record approval without an actual human decision. Local command bridges
+and role flags do not constitute an OS sandbox. Existing unconfigured legacy
+tasks remain on the original Commander-review path; global deployment is explicit.

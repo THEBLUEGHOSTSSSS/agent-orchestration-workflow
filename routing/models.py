@@ -97,6 +97,8 @@ def validate_config(config):
         raise ValueError('max_worker_attempts must equal 2')
     if config.get('routing_mode') != 'AUTO':
         raise ValueError('routing_mode must be AUTO')
+    if type(config.get('require_verification_for_new_tasks', False)) is not bool:
+        raise ValueError('require_verification_for_new_tasks must be boolean')
     _label(config.get('currency'), 'currency')
     workers = config.get('workers')
     if not isinstance(workers, list) or not workers:
@@ -188,6 +190,9 @@ def validate_config(config):
         elif isinstance(node, float) and not math.isfinite(node):
             raise ValueError('nonfinite config value')
     check_tree(config)
+    if 'verification' in config:
+        from routing.verification_rules import validate_policy
+        validate_policy(config['verification'])
     return deepcopy(config)
 
 

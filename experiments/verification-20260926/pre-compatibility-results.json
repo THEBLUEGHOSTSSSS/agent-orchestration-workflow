@@ -1,0 +1,53 @@
+[
+  {
+    "stage": "hidden_bug",
+    "requested_model": "openai/gpt-6-sol",
+    "source_kind": "probe",
+    "report": {
+      "status": "REPORTED",
+      "result": {
+        "verdict": "FAIL",
+        "confidence": 1.0,
+        "issues": [
+          {
+            "id": "C1-incorrect-operation",
+            "severity": "high",
+            "description": "add(a,b) subtracts b instead of adding it, so it fails for any nonzero b.",
+            "evidence": [
+              "maths.py defines add(a,b) as `return a-b`.",
+              "For a=1 and b=2, the function returns -1; the required sum is 3."
+            ]
+          }
+        ],
+        "evidence": [
+          "The import check passed, but it ran no numerical assertions."
+        ],
+        "recommended_action": "minor_fix",
+        "reviewer_specialty": "correctness_reviewer"
+      },
+      "usage": {
+        "cost_usd": 0.002804,
+        "total_tokens": 582
+      },
+      "duration_seconds": 4.733501,
+      "resolved_model": "openai/gpt-6-sol",
+      "error_code": null
+    }
+  },
+  {
+    "stage": "hidden_bug",
+    "requested_model": "anthropic/claude-haiku-4.5",
+    "source_kind": "probe",
+    "report": {
+      "status": "ERROR",
+      "result": null,
+      "usage": {
+        "cost_usd": 0.002101,
+        "total_tokens": 745
+      },
+      "duration_seconds": 4.455918,
+      "resolved_model": null,
+      "error_code": "invalid_response"
+    }
+  }
+]

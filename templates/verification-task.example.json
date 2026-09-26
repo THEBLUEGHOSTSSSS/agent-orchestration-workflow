@@ -1,0 +1,72 @@
+{
+  "task_id": "T42",
+  "workspace": "/REPLACE/WITH/PROJECT",
+  "baseline": "REPLACE_WITH_COMMIT_OR_HASH",
+  "work_key": "stable-description-of-original-work",
+  "objective": "REPLACE_WITH_BOUNDED_OBJECTIVE",
+  "scope": [
+    "result.txt"
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "C1",
+      "check": "REPLACE_WITH_ACTUAL_CHECK"
+    }
+  ],
+  "task_signature": {
+    "domain": "coding",
+    "task_type": "implementation",
+    "task_subtype": "backend",
+    "language": "python",
+    "framework": "stdlib",
+    "complexity": "medium",
+    "reasoning_intensity": "medium",
+    "tool_intensity": "medium",
+    "risk_level": "medium",
+    "cross_module_scope": "medium",
+    "estimated_execution_volume": "medium",
+    "verification_strength": "strong",
+    "scope": "multi_file",
+    "environment": "local",
+    "required_capabilities": [
+      "coding"
+    ]
+  },
+  "repo_context": {
+    "constraints": "REPLACE"
+  },
+  "original_plan": "REPLACE",
+  "source_kind": "real",
+  "verification": {
+    "risk_features": {
+      "complexity": 0.3,
+      "uncertainty": 0.3,
+      "business_impact": 0.3,
+      "irreversibility": 0.3,
+      "security_risk": 0.3,
+      "external_side_effects": 0.3,
+      "worker_historical_failure_rate": 0.3,
+      "verification_difficulty": 0.3
+    },
+    "artifacts": [
+      "result.txt"
+    ],
+    "checks": [
+      {
+        "id": "required-output",
+        "argv": [
+          "python3",
+          "-c",
+          "from pathlib import Path; assert Path(\"result.txt\").read_text().strip()"
+        ],
+        "required": true,
+        "timeout_seconds": 30
+      }
+    ],
+    "worker_reservation": {
+      "cost_usd": 0.5,
+      "tokens": 10000
+    },
+    "context": "REPLACE_WITH_RELEVANT_CONTEXT_ONLY. Replace the existence check with real acceptance assertions."
+  }
+}

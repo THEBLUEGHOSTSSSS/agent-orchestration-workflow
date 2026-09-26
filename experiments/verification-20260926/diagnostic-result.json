@@ -1,0 +1,11 @@
+{
+  "status": "ERROR",
+  "result": null,
+  "usage": {
+    "cost_usd": 0.002308,
+    "total_tokens": 752
+  },
+  "duration_seconds": 4.940324,
+  "resolved_model": null,
+  "error_code": "invalid_response"
+}

@@ -39,3 +39,13 @@ Adapter kinds are `codex_cli`, `claude_code`, generic `command`, and legacy `cod
 ## Safety and review
 
 Prompts, logs, and ledgers may contain sensitive project material: send only authorized context to the selected backend. Workers must not change authentication, credentials, private configuration, or delegate recursively. Role markers, scoped instructions, and static checks are not OS isolation. The commander retains architectural, security, and data-strategy decisions within human authorization. See [review and learning](docs/review-and-learning.md), the [worker contract](docs/worker-contract.md), and [security guidance](docs/security.md).
+
+## Optional Jev screening
+
+An opt-in `screen` stage can annotate reported Worker evidence before Commander review. It defaults OFF, preserves every item, and cannot accept work, change attempt counts, or update Worker suitability. See [usage and boundaries](docs/jev-screening.md) and the [repository pilot with limitations](experiments/jev-pilot-20260925/REPORT.md).
+
+## Risk-based independent verification
+
+The optional Verification & Deliberation Layer runs deterministic checks first, then 0/1/2 reviewers by risk; CRITICAL adds adversarial review and a human approval state. GPT and Claude reviewers use blind packets and a separate experience store. The existing Worker Router and two-execution limit remain intact; Judge decisions never use majority voting or replace Commander acceptance.
+
+[Guide](docs/verification/README.md) · [Implementation and test report](docs/verification/IMPLEMENTATION_REPORT.md) · [Disabled registry example](examples/registry.verification.json)

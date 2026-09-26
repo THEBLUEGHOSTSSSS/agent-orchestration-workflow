@@ -7,6 +7,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from routing.service import Workflow, commander_only
 from routing.models import profile_task
+from routing.jev import read_packet
 
 
 def read_json(path):
@@ -27,6 +28,12 @@ def main():
         p = sub.add_parser(name); p.add_argument('task_id'); p.add_argument('record')
     p = sub.add_parser('recover'); p.add_argument('task_id'); p.add_argument('--reason', required=True)
     p = sub.add_parser('inspect'); p.add_argument('task_id', nargs='?')
+    p = sub.add_parser('screen'); p.add_argument('task_id'); p.add_argument('packet')
+    p.add_argument('--mode', choices=('OFF', 'SHADOW', 'ASSIST'), default='OFF')
+    p = sub.add_parser('verify'); p.add_argument('task_id'); p.add_argument('--kind', choices=('worker', 'takeover'), default='worker')
+    for name in ('verification-approve', 'verification-feedback'):
+        p = sub.add_parser(name); p.add_argument('task_id'); p.add_argument('record')
+    p = sub.add_parser('verification-recover'); p.add_argument('task_id'); p.add_argument('--reason', required=True)
     sub.add_parser('validate')
     args = parser.parse_args()
     try:
@@ -38,6 +45,11 @@ def main():
             if args.operation == 'create': result = workflow.create(read_json(args.spec))
             elif args.operation == 'route': result = workflow.preview(args.task_id, args.worker)
             elif args.operation == 'run': result = workflow.run(args.task_id, args.worker, args.timeout)
+            elif args.operation == 'screen': result = workflow.screen(args.task_id, read_packet(args.packet), args.mode)
+            elif args.operation == 'verify': result = workflow.verify(args.task_id, args.kind)
+            elif args.operation == 'verification-approve': result = workflow.verification_approve(args.task_id, read_json(args.record))
+            elif args.operation == 'verification-feedback': result = workflow.verification_feedback(args.task_id, read_json(args.record))
+            elif args.operation == 'verification-recover': result = workflow.verification_recover(args.task_id, args.reason)
             elif args.operation == 'review': result = workflow.review(args.task_id, read_json(args.record))
             elif args.operation == 'takeover': result = workflow.takeover(args.task_id, read_json(args.record))
             elif args.operation == 'recover': result = workflow.recover(args.task_id, args.reason)
@@ -48,8 +60,8 @@ def main():
                 if errors: raise ValueError('; '.join(errors))
                 result = {'status': 'STATIC_CHECKED', 'semantic_review': 'commander responsibility'}
         print(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False))
-        return 0
-    except (OSError, ValueError, KeyError, TypeError, PermissionError) as exc:
+        return 2 if args.operation == 'screen' and result['status'] == 'UNKNOWN' else 0
+    except (OSError, ValueError, KeyError, TypeError, PermissionError, RecursionError) as exc:
         print(json.dumps({'error': str(exc), 'status': 'REFUSED'}, ensure_ascii=False), file=sys.stderr)
         return 1
 
